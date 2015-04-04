@@ -1,406 +1,552 @@
-(function(window){
-    'use strict';
-    function defineGraphmathJS(){
-        var GraphmathJS = {};
-		GraphmathJS.origineXGap=10
-		GraphmathJS.origineYGap=10
-		GraphmathJS.circles=[]
-		GraphmathJS.dragCircles=[]		
-		GraphmathJS.params = {'plot':{'clickEnable':true,'width':500,'height':400,'left':50,'top':50,'top-margin':20,'left-margin':20,'right-margin':20,'bottom-margin':20,'origin-quadrant':0,'max-drag-dot':4,'touchsense':16,'Origine-translation-grideWise-x':0,'Origine-translation-grideWise-y':0,'Origine-visible':true,'Origine-quadrant-place':3,'Origine-text-style':{'font-family':'verdana','font-size':16,'font-weight':'bold'}},'x-axis':{'stroke-count-major':10,'stroke-size': 5,'stroke-count-minor':5,'min':0,'max':10,'labels':[],'labels-margin':15,'minor-stroke-size':3,'strokes_visible':true,'snap-to-major-grid':true,'style':{"stroke": "#000000", "stroke-width": 2, "arrow-end": "open-long-wide", "arrow-start": "open-long-wide"},'stroke-style':{"stroke": "#F58220", "stroke-width": 2},'labels-style':[{"font-size": 12, "font-weight": "800"}],'labels-rotate':0,'x-title':'x-axis','x-title-margin':10,'x-title-style':{"font-size":16,"font-weight":600,"font-family":"verdana"}},'y-axis':{'stroke-size': 5,'minor-stroke-size':3,'min':0,'max':10,'stroke-count-major':10,'stroke-count-minor':5,'label-decimal':0,'labels':[],'labels-margin':15,'style':{"stroke": "#000000", "stroke-width": 2, "arrow-end": "open-long-wide", "arrow-start": "open-long-wide"},'stroke-style':{"stroke": "#F58220", "stroke-width": 2},'labels-style':[{"font-size": 12, "font-weight": "800"}],'labels-rotate':0,'title':'y-axis','title-margin':10,'title-style':{"font-size":16,"font-weight":600,"font-family":"verdana"}},'grid':{'visible':true,'minor-grid-visible':false,'major_style':{'stroke-opacity':0.5},'minor_style':{'stroke-opacity':0.1}}};
-		GraphmathJS.circleParams={"fill":"#FFCD59","stroke":"#FDBD00"}
-		GraphmathJS.dragCircleParams={"fill":"#FFCD59","stroke":"#FFCD59"}
-		GraphmathJS.dragCircleTouch={'increaseradius':7,'defaultRadius':6}
-		GraphmathJS.touchDevice=false
-		var nAgt = navigator.userAgent;
-		if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(nAgt) ) {
-			GraphmathJS.touchDevice= true;
-		}
-		GraphmathJS.setParameters=function(params){
-			params = params || {};
-			this.params=MergeRecursive(this.params,params);
-			this.origin_quadrant=this.params['plot']['origin-quadrant'];
-			this.width=this.params['plot']['width'];
-			this.height=this.params['plot']['height'];
-			this.left=this.params['plot']['left']; 
-			this.top=this.params['plot']['top'];
-			this.top_margin=this.params['plot']['top-margin'];
-			this.left_margin=this.params['plot']['left-margin'];
-			this.right_margin=this.params['plot']['right-margin'];
-			this.bottom_margin=this.params['plot']['bottom-margin'];
-			this.max_drag_dot=this.params['plot']['max-drag-dot'];
-			this.touchsense=this.params['plot']['touchsense'];
-			this.snap_to_major_grid=this.params['plot']['snap-to-major-grid'];
-			this.xstroke_count_major=this.params['x-axis']['stroke-count-major'];
-			this.ystroke_count_major=this.params['y-axis']['stroke-count-major'];
-			this.xstroke_count_minor=this.params['x-axis']['stroke-count-minor'];
-			this.ystroke_count_minor=this.params['y-axis']['stroke-count-minor'];
-			this.perx=this.width/this.xstroke_count_major;
-			this.pery=this.height/this.ystroke_count_major;
-			this.origineTranslationGrideWiseX=this.params['plot']['Origine-translation-grideWise-x']
-			this.origineTranslationGrideWiseY=this.params['plot']['Origine-translation-grideWise-y']
-			this.clickEnable=this.params['plot']['clickEnable']
-			this.origineTranslationY=this.origineTranslationGrideWiseX*this.pery
-			this.origineTranslationX=this.origineTranslationGrideWiseY*this.perx			
-		}
-		GraphmathJS.drawCoOrdinateSystem=function(paper){
-			this.drawAxies(paper);
-			this.drawGrids(paper);
-			this.drawStrokes(paper);
-			this.writeLabels(paper)
-			GraphmathJS.paper=paper
-			if(this.params["plot"]["Origine-visible"])
-				this.writeOrigin(paper)
-		}
-		GraphmathJS.writeOrigin=function(paper){
-			
-			if(this.params["plot"]["Origine-quadrant-place"]==1)
-				paper.text(this.origineTranslationX+this.left_margin+this.left+this.origineXGap,this.height+(this.top_margin+this.top+this.origineTranslationY-this.bottom_margin-this.origineYGap),"0").attr(this.params["plot"]["Origine-text-style"])
-			else if(this.params["plot"]["Origine-quadrant-place"]==2)
-				paper.text(this.origineTranslationX+this.left_margin+this.left-this.origineXGap,this.height+(this.top_margin+this.top+this.origineTranslationY-this.bottom_margin-this.origineYGap),"0").attr(this.params["plot"]["Origine-text-style"])
-			else if(this.params["plot"]["Origine-quadrant-place"]==3)
-				paper.text(this.origineTranslationX+this.left_margin+this.left-this.origineXGap,this.height+(this.top_margin+this.top+this.origineTranslationY-this.bottom_margin)+this.origineYGap,"0").attr(this.params["plot"]["Origine-text-style"])
-			else if(this.params["plot"]["Origine-quadrant-place"]==4)
-				paper.text(this.origineTranslationX+this.left_margin+this.left+this.origineXGap,this.height+(this.top_margin+this.top+this.origineTranslationY-this.bottom_margin+this.origineYGap),"0").attr(this.params["plot"]["Origine-text-style"])
-		}
-		GraphmathJS.writeLabels=function(paper){
-			this.labelsx=this.params["x-axis"]["labels"];
-			if(this.labelsx.length<=0){
-				var step=(this.params["x-axis"]["max"]-this.params["x-axis"]["min"])/this.xstroke_count_major
-				for (var i=this.origineTranslationGrideWiseY-1;i>=0;i--){
-					if(i==0)
-						this.labelsx.push('')
-					else
-						this.labelsx.push((i)*step*(-1))
-				}
-				for (var i=this.origineTranslationGrideWiseY;i<=this.xstroke_count_major;i++){
-					this.labelsx.push((i+1-this.origineTranslationGrideWiseY)*step)
-				}
+'use strict';
+function GraphmathJS(){
+    var GraphmathJS = this;
+	GraphmathJS.origineXGap=10
+	GraphmathJS.origineYGap=10
+	GraphmathJS.circles=[]
+	GraphmathJS.dragCircles=[]		
+	GraphmathJS.lines=[]
+	GraphmathJS.dragLines=[]
+	GraphmathJS.params = {'plot':{'clickEnable':true,'width':500,'height':400,'left':50,'top':50,'top-margin':20,'left-margin':20,'right-margin':20,'bottom-margin':20,'origin-quadrant':0,'max-drag-dot':4,'touchsense':16,'Origine-translation-grideWise-x':0,'Origine-translation-grideWise-y':0,'Origine-visible':true,'Origine-quadrant-place':3,'Origine-text-style':{'font-family':'verdana','font-size':16,'font-weight':'bold'}},'x-axis':{'stroke-count-major':10,'stroke-size': 5,'stroke-count-minor':5,'min':0,'max':10,'labels':[],'labels-margin':15,'minor-stroke-size':3,'strokes_visible':true,'snap-to-major-grid':true,'style':{"stroke": "#000000", "stroke-width": 2, "arrow-end": "open-long-wide", "arrow-start": "open-long-wide"},'stroke-style':{"stroke": "#F58220", "stroke-width": 2},'labels-style':[{"font-size": 12, "font-weight": "800"}],'labels-rotate':0,'x-title':'x-axis','x-title-margin':10,'x-title-style':{"font-size":16,"font-weight":600,"font-family":"verdana"}},'y-axis':{'stroke-size': 5,'minor-stroke-size':3,'min':0,'max':10,'stroke-count-major':10,'stroke-count-minor':5,'label-decimal':0,'labels':[],'labels-margin':15,'style':{"stroke": "#000000", "stroke-width": 2, "arrow-end": "open-long-wide", "arrow-start": "open-long-wide"},'stroke-style':{"stroke": "#F58220", "stroke-width": 2},'labels-style':[{"font-size": 12, "font-weight": "800"}],'labels-rotate':0,'title':'y-axis','title-margin':10,'title-style':{"font-size":16,"font-weight":600,"font-family":"verdana"}},'grid':{'visible':true,'minor-grid-visible':false,'major_style':{'stroke-opacity':0.5},'minor_style':{'stroke-opacity':0.1}}};
+	GraphmathJS.circleParams={"fill":"#FFCD59","stroke":"#FDBD00"}
+	GraphmathJS.dragCircleParams={"fill":"#FFCD59","stroke":"#FFCD59"}
+	GraphmathJS.dragCircleTouch={'increaseradius':7,'defaultRadius':6}
+	GraphmathJS.defaultLineParameter={'stroke-width':3,'stroke':'#4aba8d'}
+	GraphmathJS.touchDevice=false
+	var nAgt = navigator.userAgent;
+	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(nAgt) ) {
+		GraphmathJS.touchDevice= true;
+	}
+	GraphmathJS.setParameters=function(params){
+		params = params || {};
+		this.params=MergeRecursive(this.params,params);
+		this.origin_quadrant=this.params['plot']['origin-quadrant'];
+		this.width=this.params['plot']['width'];
+		this.height=this.params['plot']['height'];
+		this.left=this.params['plot']['left']; 
+		this.top=this.params['plot']['top'];
+		this.top_margin=this.params['plot']['top-margin'];
+		this.left_margin=this.params['plot']['left-margin'];
+		this.right_margin=this.params['plot']['right-margin'];
+		this.bottom_margin=this.params['plot']['bottom-margin'];
+		this.max_drag_dot=this.params['plot']['max-drag-dot'];
+		this.touchsense=this.params['plot']['touchsense'];
+		this.snap_to_major_grid=this.params['plot']['snap-to-major-grid'];
+		this.xstroke_count_major=this.params['x-axis']['stroke-count-major'];
+		this.ystroke_count_major=this.params['y-axis']['stroke-count-major'];
+		this.xstroke_count_minor=this.params['x-axis']['stroke-count-minor'];
+		this.ystroke_count_minor=this.params['y-axis']['stroke-count-minor'];
+		this.perx=this.width/this.xstroke_count_major;
+		this.pery=this.height/this.ystroke_count_major;
+		this.origineTranslationGrideWiseX=this.params['plot']['Origine-translation-grideWise-x']
+		this.origineTranslationGrideWiseY=this.params['plot']['Origine-translation-grideWise-y']
+		this.clickEnable=this.params['plot']['clickEnable']
+		this.origineTranslationY=this.origineTranslationGrideWiseX*this.pery
+		this.origineTranslationX=this.origineTranslationGrideWiseY*this.perx			
+	}
+	GraphmathJS.drawCoOrdinateSystem=function(paper){
+		this.drawAxies(paper);
+		this.drawGrids(paper);
+		this.drawStrokes(paper);
+		this.writeLabels(paper)
+		GraphmathJS.paper=paper
+		if(this.params["plot"]["Origine-visible"])
+			this.writeOrigin(paper)
+	}
+	GraphmathJS.writeOrigin=function(paper){
+		
+		if(this.params["plot"]["Origine-quadrant-place"]==1)
+			paper.text(this.origineTranslationX+this.left_margin+this.left+this.origineXGap,this.height+(this.top_margin+this.top+this.origineTranslationY-this.bottom_margin-this.origineYGap),"0").attr(this.params["plot"]["Origine-text-style"])
+		else if(this.params["plot"]["Origine-quadrant-place"]==2)
+			paper.text(this.origineTranslationX+this.left_margin+this.left-this.origineXGap,this.height+(this.top_margin+this.top+this.origineTranslationY-this.bottom_margin-this.origineYGap),"0").attr(this.params["plot"]["Origine-text-style"])
+		else if(this.params["plot"]["Origine-quadrant-place"]==3)
+			paper.text(this.origineTranslationX+this.left_margin+this.left-this.origineXGap,this.height+(this.top_margin+this.top+this.origineTranslationY-this.bottom_margin)+this.origineYGap,"0").attr(this.params["plot"]["Origine-text-style"])
+		else if(this.params["plot"]["Origine-quadrant-place"]==4)
+			paper.text(this.origineTranslationX+this.left_margin+this.left+this.origineXGap,this.height+(this.top_margin+this.top+this.origineTranslationY-this.bottom_margin+this.origineYGap),"0").attr(this.params["plot"]["Origine-text-style"])
+	}
+	GraphmathJS.writeLabels=function(paper){
+		this.labelsx=this.params["x-axis"]["labels"];
+		if(this.labelsx.length<=0){
+			var step=(this.params["x-axis"]["max"]-this.params["x-axis"]["min"])/this.xstroke_count_major
+			for (var i=this.origineTranslationGrideWiseY-1;i>=0;i--){
+				if(i==0)
+					this.labelsx.push('')
+				else
+					this.labelsx.push((i)*step*(-1))
 			}
-			for (var i=0;i<this.xmajor_grid_pointset.length;i++){
-				paper.text(this.xmajor_grid_pointset[i][0],this.xmajor_grid_pointset[i][1]+this.params["x-axis"]["labels-margin"]+this.origineTranslationY,this.labelsx[i]).rotate(this.params["x-axis"]["labels-rotate"]).attr(this.params["x-axis"]["labels-style"])
-			}
-			this.labelsy=this.params["y-axis"]["labels"];
-			if(this.labelsy.length<=0){
-				var step=(this.params["y-axis"]["max"]-this.params["y-axis"]["min"])/this.ystroke_count_major
-							
-				for (var i=this.origineTranslationGrideWiseX*(-1);i>=0;i--){
-					if(i==0)
-						this.labelsy.push('')
-					else
-						this.labelsy.push((i)*step*(-1))
-				}
-				for (var i=this.origineTranslationGrideWiseX;i<=this.ystroke_count_major;i++){
-					this.labelsy.push((i+1-this.origineTranslationGrideWiseX)*step)
-				}
-			}
-			for (var i=0;i<this.ymajor_grid_pointset.length;i++){
-				paper.text(this.ymajor_grid_pointset[i][0]+this.origineTranslationX-this.params["y-axis"]["labels-margin"],this.ymajor_grid_pointset[i][1],this.labelsy[this.ymajor_grid_pointset.length-i]).rotate(this.params["y-axis"]["labels-rotate"]).attr(this.params["y-axis"]["labels-style"])
+			for (var i=this.origineTranslationGrideWiseY;i<=this.xstroke_count_major;i++){
+				this.labelsx.push((i+1-this.origineTranslationGrideWiseY)*step)
 			}
 		}
-		GraphmathJS.drawStrokes=function(paper){
-			this.drawMajorStroke(paper);
-			if (this.params["grid"]["minor-grid-visible"])
-				this.drawMinorStroke(paper);
+		for (var i=0;i<this.xmajor_grid_pointset.length;i++){
+			paper.text(this.xmajor_grid_pointset[i][0],this.xmajor_grid_pointset[i][1]+this.params["x-axis"]["labels-margin"]+this.origineTranslationY,this.labelsx[i]).rotate(this.params["x-axis"]["labels-rotate"]).attr(this.params["x-axis"]["labels-style"])
 		}
-		GraphmathJS.drawMajorStroke=function(paper){			
-			var pointset=[]
-			for (var i=0;i<this.xmajor_grid_pointset.length;i++){
-				pointset.push(["M",this.xmajor_grid_pointset[i][0]+this.transformXAxies[0],this.xmajor_grid_pointset[i][1]-this.params['x-axis']['stroke-size']+this.transformXAxies[1]])
-				pointset.push(["L",this.xmajor_grid_pointset[i][0]+this.transformXAxies[0],this.xmajor_grid_pointset[i][1]+this.params['x-axis']['stroke-size']+this.transformXAxies[1]])
+		this.labelsy=this.params["y-axis"]["labels"];
+		if(this.labelsy.length<=0){
+			var step=(this.params["y-axis"]["max"]-this.params["y-axis"]["min"])/this.ystroke_count_major
+						
+			for (var i=this.origineTranslationGrideWiseX*(-1);i>=0;i--){
+				if(i==0)
+					this.labelsy.push('')
+				else
+					this.labelsy.push((i)*step*(-1))
 			}
-			for (var i=0;i<this.ymajor_grid_pointset.length;i++){
-				pointset.push(["M",this.ymajor_grid_pointset[i][0]-this.params['x-axis']['stroke-size']+this.transformYAxies[0],this.ymajor_grid_pointset[i][1]+this.transformYAxies[1]])
-				pointset.push(["L",this.ymajor_grid_pointset[i][0]+this.params['x-axis']['stroke-size']+this.transformYAxies[0],this.ymajor_grid_pointset[i][1]+this.transformYAxies[1]])
+			for (var i=this.origineTranslationGrideWiseX;i<=this.ystroke_count_major;i++){
+				this.labelsy.push((i+1-this.origineTranslationGrideWiseX)*step)
 			}
-			paper.path(pointset).attr(this.params['x-axis']['stroke-style']);
 		}
-		GraphmathJS.drawMinorStroke=function(paper){
-			var pointSet=[]
-			for (var i=0;i<this.xminor_grid_pointset.length;i++){
-				pointSet.push(["M",this.xminor_grid_pointset[i][0]+this.transformXAxies[0],this.xminor_grid_pointset[i][1]-this.params['x-axis']['minor-stroke-size']+this.transformXAxies[1]])
-				pointSet.push(["L",this.xminor_grid_pointset[i][0]+this.transformXAxies[0],this.xminor_grid_pointset[i][1]+this.params['x-axis']['minor-stroke-size']+this.transformXAxies[1]])
-			}
-			for (var i=0;i<this.yminor_grid_pointset.length;i++){
-				pointSet.push(["M",this.yminor_grid_pointset[i][0]-this.params['x-axis']['minor-stroke-size']+this.transformYAxies[0],this.yminor_grid_pointset[i][1]+this.transformYAxies[1]])
-				pointSet.push(["L",this.yminor_grid_pointset[i][0]+this.params['x-axis']['minor-stroke-size']+this.transformYAxies[0],this.yminor_grid_pointset[i][1]+this.transformYAxies[1]])
-			}
-			paper.path(pointSet).attr(this.params['x-axis']['stroke-style']);
+		for (var i=0;i<this.ymajor_grid_pointset.length;i++){
+			paper.text(this.ymajor_grid_pointset[i][0]+this.origineTranslationX-this.params["y-axis"]["labels-margin"],this.ymajor_grid_pointset[i][1],this.labelsy[this.ymajor_grid_pointset.length-i]).rotate(this.params["y-axis"]["labels-rotate"]).attr(this.params["y-axis"]["labels-style"])
 		}
-		GraphmathJS.drawGrids=function(paper){
-			if(this.params['grid']['minor-grid-visible'])
-				this.drawMinorGrid(paper);
-			this.drawMajorGrid(paper);
+	}
+	GraphmathJS.drawStrokes=function(paper){
+		this.drawMajorStroke(paper);
+		if (this.params["grid"]["minor-grid-visible"])
+			this.drawMinorStroke(paper);
+	}
+	GraphmathJS.drawMajorStroke=function(paper){			
+		var pointset=[]
+		for (var i=0;i<this.xmajor_grid_pointset.length;i++){
+			pointset.push(["M",this.xmajor_grid_pointset[i][0]+this.transformXAxies[0],this.xmajor_grid_pointset[i][1]-this.params['x-axis']['stroke-size']+this.transformXAxies[1]])
+			pointset.push(["L",this.xmajor_grid_pointset[i][0]+this.transformXAxies[0],this.xmajor_grid_pointset[i][1]+this.params['x-axis']['stroke-size']+this.transformXAxies[1]])
 		}
-		GraphmathJS.drawMinorGrid=function(paper){
-			var pointset=[]
-			this.xminor_grid_pointset=[]
-			this.yminor_grid_pointset=[]
-			for(var i=0;i<this.xstroke_count_major;i++){
-				for (var j=0;j<(this.xstroke_count_minor-1);j++){
-					pointset.push(["M",this.left+this.left_margin+this.perx*i+(this.perx/this.xstroke_count_minor)*(j+1),this.top]);
-					pointset.push(["L",this.left+this.left_margin+this.perx*i+(this.perx/this.xstroke_count_minor)*(j+1),this.top+this.height]);
-					this.xminor_grid_pointset.push([this.left+this.left_margin+this.perx*i+(this.perx/this.xstroke_count_minor)*(j+1),this.top+this.height])
-				}
-			}
-			for(var i=0;i<this.ystroke_count_major;i++){				
-				for (var j=0;j<(this.ystroke_count_minor-1);j++){
-					pointset.push(["M",this.left+this.left_margin,this.top+this.pery*i+(this.pery/this.ystroke_count_minor)*(j+1)]);
-					pointset.push(["L",this.left+this.left_margin+this.width,this.top+this.pery*i+(this.pery/this.ystroke_count_minor)*(j+1)]);
-					this.yminor_grid_pointset.push([this.left+this.left_margin,this.top+this.pery*i+(this.pery/this.ystroke_count_minor)*(j+1)])
-				}
-			}
-			this.minor_grid=paper.path(pointset).attr(this.params['grid']['minor_style'])
+		for (var i=0;i<this.ymajor_grid_pointset.length;i++){
+			pointset.push(["M",this.ymajor_grid_pointset[i][0]-this.params['x-axis']['stroke-size']+this.transformYAxies[0],this.ymajor_grid_pointset[i][1]+this.transformYAxies[1]])
+			pointset.push(["L",this.ymajor_grid_pointset[i][0]+this.params['x-axis']['stroke-size']+this.transformYAxies[0],this.ymajor_grid_pointset[i][1]+this.transformYAxies[1]])
 		}
-		GraphmathJS.drawMajorGrid=function(paper){
-			var pointset=[]
-			this.xmajor_grid_pointset=[]
-			this.ymajor_grid_pointset=[]
-			pointset.push(["M",this.left+this.left_margin,this.top]);
-			pointset.push(["L",this.left+this.left_margin,this.top+this.height]);
-			for(var i=0;i<this.xstroke_count_major;i++){
-				pointset.push(["M",this.left+this.left_margin+this.perx*(i+1),this.top]);
-				pointset.push(["L",this.left+this.left_margin+this.perx*(i+1),this.top+this.height]);
-				this.xmajor_grid_pointset.push([this.left+this.left_margin+this.perx*(i+1),this.top+this.height])
+		paper.path(pointset).attr(this.params['x-axis']['stroke-style']);
+	}
+	GraphmathJS.drawMinorStroke=function(paper){
+		var pointSet=[]
+		for (var i=0;i<this.xminor_grid_pointset.length;i++){
+			pointSet.push(["M",this.xminor_grid_pointset[i][0]+this.transformXAxies[0],this.xminor_grid_pointset[i][1]-this.params['x-axis']['minor-stroke-size']+this.transformXAxies[1]])
+			pointSet.push(["L",this.xminor_grid_pointset[i][0]+this.transformXAxies[0],this.xminor_grid_pointset[i][1]+this.params['x-axis']['minor-stroke-size']+this.transformXAxies[1]])
+		}
+		for (var i=0;i<this.yminor_grid_pointset.length;i++){
+			pointSet.push(["M",this.yminor_grid_pointset[i][0]-this.params['x-axis']['minor-stroke-size']+this.transformYAxies[0],this.yminor_grid_pointset[i][1]+this.transformYAxies[1]])
+			pointSet.push(["L",this.yminor_grid_pointset[i][0]+this.params['x-axis']['minor-stroke-size']+this.transformYAxies[0],this.yminor_grid_pointset[i][1]+this.transformYAxies[1]])
+		}
+		paper.path(pointSet).attr(this.params['x-axis']['stroke-style']);
+	}
+	GraphmathJS.drawGrids=function(paper){
+		if(this.params['grid']['minor-grid-visible'])
+			this.drawMinorGrid(paper);
+		this.drawMajorGrid(paper);
+	}
+	GraphmathJS.drawMinorGrid=function(paper){
+		var pointset=[]
+		this.xminor_grid_pointset=[]
+		this.yminor_grid_pointset=[]
+		for(var i=0;i<this.xstroke_count_major;i++){
+			for (var j=0;j<(this.xstroke_count_minor-1);j++){
+				pointset.push(["M",this.left+this.left_margin+this.perx*i+(this.perx/this.xstroke_count_minor)*(j+1),this.top]);
+				pointset.push(["L",this.left+this.left_margin+this.perx*i+(this.perx/this.xstroke_count_minor)*(j+1),this.top+this.height]);
+				this.xminor_grid_pointset.push([this.left+this.left_margin+this.perx*i+(this.perx/this.xstroke_count_minor)*(j+1),this.top+this.height])
 			}
-			for(var i=0;i<this.ystroke_count_major;i++){
-				pointset.push(["M",this.left+this.left_margin,this.top+this.pery*(i)]);
-				pointset.push(["L",this.left+this.left_margin+this.width,this.top+this.pery*(i)]);
-				this.ymajor_grid_pointset.push([this.left+this.left_margin,this.top+this.pery*(i)])
+		}
+		for(var i=0;i<this.ystroke_count_major;i++){				
+			for (var j=0;j<(this.ystroke_count_minor-1);j++){
+				pointset.push(["M",this.left+this.left_margin,this.top+this.pery*i+(this.pery/this.ystroke_count_minor)*(j+1)]);
+				pointset.push(["L",this.left+this.left_margin+this.width,this.top+this.pery*i+(this.pery/this.ystroke_count_minor)*(j+1)]);
+				this.yminor_grid_pointset.push([this.left+this.left_margin,this.top+this.pery*i+(this.pery/this.ystroke_count_minor)*(j+1)])
 			}
+		}
+		this.minor_grid=paper.path(pointset).attr(this.params['grid']['minor_style'])
+	}
+	GraphmathJS.drawMajorGrid=function(paper){
+		var pointset=[]
+		this.xmajor_grid_pointset=[]
+		this.ymajor_grid_pointset=[]
+		pointset.push(["M",this.left+this.left_margin,this.top]);
+		pointset.push(["L",this.left+this.left_margin,this.top+this.height]);
+		for(var i=0;i<this.xstroke_count_major;i++){
+			pointset.push(["M",this.left+this.left_margin+this.perx*(i+1),this.top]);
+			pointset.push(["L",this.left+this.left_margin+this.perx*(i+1),this.top+this.height]);
+			this.xmajor_grid_pointset.push([this.left+this.left_margin+this.perx*(i+1),this.top+this.height])
+		}
+		for(var i=0;i<this.ystroke_count_major;i++){
 			pointset.push(["M",this.left+this.left_margin,this.top+this.pery*(i)]);
 			pointset.push(["L",this.left+this.left_margin+this.width,this.top+this.pery*(i)]);
-			this.major_grid=paper.path(pointset).attr(this.params['grid']['major_style']);
-			if (this.clickEnable){
-				GraphmathJS.setClickOnGraph(paper)
-			}
+			this.ymajor_grid_pointset.push([this.left+this.left_margin,this.top+this.pery*(i)])
 		}
-		GraphmathJS.drawAxies=function(paper){
-			this.yaxis;
-			this.xaxis;
-			this.transformXAxies=[]
-			this.transformYAxies=[]
-			if(this.origin_quadrant==0){
-				this.xaxis=paper.path([["M",this.left,this.top+this.height+this.origineTranslationY],["L",this.left+this.left_margin+this.width+this.right_margin,this.top+this.height+this.origineTranslationY]]);
-				this.yaxis=paper.path([["M",this.left+this.left_margin+this.origineTranslationX,this.top-this.top_margin],["L",this.left+this.left_margin+this.origineTranslationX,this.top+this.height+this.bottom_margin]]);
-				this.transformXAxies=[0,this.origineTranslationY]
-				this.transformYAxies=[this.origineTranslationX,0]
-			}
-			else{
-				this.xaxis=paper.path([["M",this.left,this.top+this.height/2+this.origineTranslationY],["L",this.left+this.left_margin+this.width+this.right_margin,this.top+this.height/2+this.origineTranslationY]]);
-				this.yaxis=paper.path([["M",this.left+this.left_margin+this.width/2+this.origineTranslationX,this.top-this.top_margin],["L",this.left+this.left_margin+this.width/2+this.origineTranslationX,this.top+this.height+this.bottom_margin]]);
-				this.transformXAxies=[0,-this.height/2+this.origineTranslationY]
-				this.transformYAxies=[this.width/2+this.origineTranslationX,0]
-			}
-			this.xaxis.attr(this.params['x-axis']['style']);
-			this.yaxis.attr(this.params['y-axis']['style']);
+		pointset.push(["M",this.left+this.left_margin,this.top+this.pery*(i)]);
+		pointset.push(["L",this.left+this.left_margin+this.width,this.top+this.pery*(i)]);
+		this.major_grid=paper.path(pointset).attr(this.params['grid']['major_style']);
+		if (this.clickEnable){
+			GraphmathJS.setClickOnGraph(paper)
+			GraphmathJS.clickInstruction=paper.text(GraphmathJS.left+GraphmathJS.left_margin+GraphmathJS.width/2,GraphmathJS.top+GraphmathJS.height/2,"Click to add vertices").attr({'font-family':'verdana','font-size':25,'fill':'#949096'}).toBack();
 		}
-		GraphmathJS.circle=function(paper,cx,cy,r){
+	}
+	GraphmathJS.drawAxies=function(paper){
+		this.yaxis;
+		this.xaxis;
+		this.transformXAxies=[]
+		this.transformYAxies=[]
+		if(this.origin_quadrant==0){
+			this.xaxis=paper.path([["M",this.left,this.top+this.height+this.origineTranslationY],["L",this.left+this.left_margin+this.width+this.right_margin,this.top+this.height+this.origineTranslationY]]);
+			this.yaxis=paper.path([["M",this.left+this.left_margin+this.origineTranslationX,this.top-this.top_margin],["L",this.left+this.left_margin+this.origineTranslationX,this.top+this.height+this.bottom_margin]]);
+			this.transformXAxies=[0,this.origineTranslationY]
+			this.transformYAxies=[this.origineTranslationX,0]
+		}
+		else{
+			this.xaxis=paper.path([["M",this.left,this.top+this.height/2+this.origineTranslationY],["L",this.left+this.left_margin+this.width+this.right_margin,this.top+this.height/2+this.origineTranslationY]]);
+			this.yaxis=paper.path([["M",this.left+this.left_margin+this.width/2+this.origineTranslationX,this.top-this.top_margin],["L",this.left+this.left_margin+this.width/2+this.origineTranslationX,this.top+this.height+this.bottom_margin]]);
+			this.transformXAxies=[0,-this.height/2+this.origineTranslationY]
+			this.transformYAxies=[this.width/2+this.origineTranslationX,0]
+		}
+		this.xaxis.attr(this.params['x-axis']['style']);
+		this.yaxis.attr(this.params['y-axis']['style']);
+	}
+	GraphmathJS.circle=function(paper,cx,cy,r){
+		var actualX=GraphmathJS.getActualCoordinate(cx,cy)
+		var xy=GraphmathJS.setToMajorMinorGrid(actualX.x, actualX.y)
+		var c=paper.circle(xy[0],xy[1],r).attr(this.circleParams)
+		c.data('ref',c)
+		GraphmathJS.circles.push(c)
+		return c
+	}
+	GraphmathJS.getCircles=function(){
+		return (GraphmathJS.circles)
+	}
+	GraphmathJS.getDragCircles=function(){
+		return (GraphmathJS.dragCircles)
+	}
+	GraphmathJS.getActualCoordinate=function(cx,cy){
+		return({'x':cx*GraphmathJS.perx+(GraphmathJS.origineTranslationX+GraphmathJS.left+GraphmathJS.left_margin),'y':(GraphmathJS.ystroke_count_major-cy)*(GraphmathJS.pery)+(GraphmathJS.top+GraphmathJS.origineTranslationY)})
+	}
+	GraphmathJS.dragCircle=function(paper,cx,cy,r){
+		if (GraphmathJS.clickEnable){
+		GraphmathJS.clickInstruction.hide()
+		}
+		var actualX=GraphmathJS.getActualCoordinate(cx,cy)
+		var xy=GraphmathJS.setToMajorMinorGrid(actualX.x, actualX.y)
+		var c=paper.circle(xy[0],xy[1],r).attr(this.dragCircleParams)
+		var touchCircle=paper.circle(xy[0],xy[1],r+this.touchsense)
+		touchCircle.attr({'opacity':0,'cursor':'move','fill':'#fff'})
+		var touchCircleSet=paper.set()
+		touchCircleSet.push(c)
+		touchCircleSet.attr({'cursor':'move'})
+		touchCircleSet.push(touchCircle)
+		touchCircleSet.data({'ref':touchCircleSet,'intialr':r})
+		touchCircleSet.drag(this.moveCircle,this.startCircle,this.upCircle)
+		touchCircleSet.onDragOver(this.onDragOverCircle)
+		if (GraphmathJS.touchDevice){
+			touchCircleSet.touchstart(this.finCircle);
+			touchCircleSet.touchend(this.foutCircle);
+		}
+		else{
+			touchCircleSet.hover(this.finCircle,this.foutCircle)
+		}
+		GraphmathJS.circles.push(touchCircleSet)
+		GraphmathJS.dragCircles.push(touchCircleSet)
+		touchCircleSet.toFront()
+		return touchCircleSet
+	}
+	GraphmathJS.onDragOverCircle=function(){
+	}
+	GraphmathJS.getMaxXY=function(){
+		return ([this.left+this.left_margin+this.width,this.top+this.top_margin+this.height])
+	}
+	GraphmathJS.getMinXY=function(){
+		return ([this.left+this.left_margin,this.top+this.top_margin])
+	}
+	GraphmathJS.insideGraph=function(x,y){
+		var startXY=this.getMinXY();
+		var endXY=this.getMaxXY();
+		if (startXY[0]<x && endXY[0]>x && startXY[1]<y && endXY[1]>y){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	GraphmathJS.onRightBorder=function(x,y){
+		var maxX=this.left+this.left_margin+this.width
+		var maxY=this.top+this.height
+		var minY=this.top
+		if (x>=maxX && y>=minY && y<=maxY){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	GraphmathJS.onLeftBorder=function(x,y){
+		var maxX=this.left+this.left_margin
+		var maxY=this.top+this.height
+		var minY=this.top
+		if (x<=maxX && y>=minY && y<=maxY){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	GraphmathJS.onTopBorder=function(x,y){
+		var maxY=this.top
+		var minX=this.left+this.left_margin
+		var maxX=this.left+this.left_margin+this.width
+		if (y<=maxY && x>=minX && x<=maxX){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	GraphmathJS.onBottomBorder=function(x,y){
+		var maxY=this.top+this.height
+		var minX=this.left+this.left_margin
+		var maxX=this.left+this.left_margin+this.width
+		if (y>=maxY && x>minX && x<maxX){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	GraphmathJS.startCircle=function(){			
+		this.ox=this.attr('cx')
+		this.oy=this.attr('cy')
+	}
+	GraphmathJS.movingCircle=function(cur,oldX,oldY,dx,dy){
+		if(GraphmathJS.insideGraph(oldX+dx,oldY+dy)){
+			cur.attr({'cx':oldX+dx,'cy':oldY+dy})
+		}
+		else if(GraphmathJS.onLeftBorder(oldX+dx,oldY+dy)){
+			cur.attr({'cx':GraphmathJS.left+GraphmathJS.left_margin,'cy':oldY+dy})			
+		}
+		else if(GraphmathJS.onRightBorder(oldX+dx,oldY+dy)){
+			cur.attr({'cx':GraphmathJS.left+GraphmathJS.left_margin+GraphmathJS.width,'cy':oldY+dy})			
+		}
+		else if(GraphmathJS.onTopBorder(oldX+dx,oldY+dy)){
+			cur.attr({'cx':oldX+dx,'cy':GraphmathJS.top})			
+		}
+		else if(GraphmathJS.onBottomBorder(oldX+dx,oldY+dy)){
+			cur.attr({'cx':oldX+dx,'cy':GraphmathJS.top+GraphmathJS.height})
+		}
+		if(typeof cur.path !== "undefined"){
+			GraphmathJS.drawPathLine(cur)
+		}
+	}
+	GraphmathJS.moveCircle=function(dx,dy){
+		GraphmathJS.movingCircle(this.data('ref'),this.ox,this.oy,dx,dy)
+	}
+	GraphmathJS.upCircle=function(){
+		var xy=GraphmathJS.setToMajorMinorGrid(this.attr('cx'),this.attr('cy'))
+		this.data('ref').attr({'cx':xy[0],'cy':xy[1]})
+		this.attr({'cx':xy[0],'cy':xy[1]})
+		GraphmathJS.overlappingPoints(this.data('ref'))
+		if(typeof this.data('ref').path !== "undefined"){
+			GraphmathJS.drawPathLine(this.data('ref'))
+		}
+		GraphmathJS.callBackCircleUp()
+	}
+	GraphmathJS.finCircle=function(){
+		this.data('ref').animate({'r':this.data('intialr')+GraphmathJS.dragCircleTouch['increaseradius']},50,">")
+		this.animate({'r':GraphmathJS.touchsense+this.data('intialr')+GraphmathJS.dragCircleTouch['increaseradius']},50,">");			
+	}
+	GraphmathJS.foutCircle=function(dx,dy){
+		this.data('ref').animate({'r':this.data('intialr')},50,">")
+		this.animate({'r':GraphmathJS.touchsense+this.data('intialr')},50,">");
+	}//handlerfunction
+	GraphmathJS.circlePerSquere=function(){
+		if (this.snap_to_major_grid){
+			return({'cpsx':GraphmathJS.xstroke_count_minor,'cpsy':GraphmathJS.ystroke_count_minor})
+		}
+		else{
+			return({'cpsx':1,'cpsy':1})
+		}
+	}
+	GraphmathJS.setToMajorMinorGrid=function(x,y){
+		var cps=GraphmathJS.circlePerSquere()
+		var cpsx=cps.cpsx
+		var cpsy=cps.cpsy
+		var mx=Math.round((x-GraphmathJS.left-GraphmathJS.left_margin)/(GraphmathJS.perx/cpsx));
+		var my=Math.round((y-GraphmathJS.top)/(GraphmathJS.pery/cpsy));
+		var aprX=mx*(GraphmathJS.perx/cpsx)+(GraphmathJS.left+GraphmathJS.left_margin);
+		var aprY=my*(GraphmathJS.pery/cpsy)+(GraphmathJS.top);
+		return([aprX,aprY])
+	}
+	GraphmathJS.callBackCircleUp=function(){
 
-			var xy=GraphmathJS.setToMajorMinorGrid(cx, cy)
-			var c=paper.circle(xy[0],xy[1],r).attr(this.circleParams)
-			c.data('ref',c)
-			GraphmathJS.circles.push(c)
-			return c
-		}
-		GraphmathJS.getCircles=function(){
-			return (this.circles)
-		}
-		GraphmathJS.getDragCircles=function(){
-			return (this.dragCircles)
-		}
-		GraphmathJS.getActualCoordinate=function(cx,cy){
-			return({'x':cx*GraphmathJS.perx+(GraphmathJS.origineTranslationX+GraphmathJS.left+GraphmathJS.left_margin),'y':(GraphmathJS.ystroke_count_major-cy)*(GraphmathJS.pery)+(GraphmathJS.top+GraphmathJS.origineTranslationY)})
-		}
-		GraphmathJS.dragCircle=function(paper,cx,cy,r){
-			var actualX=GraphmathJS.getActualCoordinate(cx,cy)
-			var xy=GraphmathJS.setToMajorMinorGrid(actualX.x, actualX.y)
-			var c=paper.circle(xy[0],xy[1],r).attr(this.dragCircleParams)
-			var touchCircle=paper.circle(xy[0],xy[1],r+this.touchsense)
-			touchCircle.attr({'opacity':0,'cursor':'move','fill':'#fff'})
-			var touchCircleSet=paper.set()
-			touchCircleSet.push(c)
-			touchCircleSet.attr({'cursor':'move'})
-			touchCircleSet.push(touchCircle)
-			touchCircleSet.data({'ref':touchCircleSet,'intialr':r})
-			touchCircleSet.drag(this.moveCircle,this.startCircle,this.upCircle)
-			touchCircleSet.onDragOver(this.onDragOverCircle)
-			if (GraphmathJS.touchDevice){
-				touchCircleSet.touchstart(this.finCircle);
-				touchCircleSet.touchend(this.foutCircle);
-			}
-			else{
-				touchCircleSet.hover(this.finCircle,this.foutCircle)
-			}
-			this.circles.push(touchCircleSet)
-			this.dragCircles.push(touchCircleSet)
-			return touchCircleSet
-		}
-		GraphmathJS.onDragOverCircle=function(){
-		}
-		GraphmathJS.getMaxXY=function(){
-			return ([this.left+this.left_margin+this.width,this.top+this.top_margin+this.height])
-		}
-		GraphmathJS.getMinXY=function(){
-			return ([this.left+this.left_margin,this.top+this.top_margin])
-		}
-		GraphmathJS.insideGraph=function(x,y){
-			var startXY=this.getMinXY();
-			var endXY=this.getMaxXY();
-			if (startXY[0]<x && endXY[0]>x && startXY[1]<y && endXY[1]>y){
-				return true;
-			}
-			else{
-				return false;
-			}
-		}
-		GraphmathJS.onRightBorder=function(x,y){
-			var maxX=this.left+this.left_margin+this.width
-			var maxY=this.top+this.height
-			var minY=this.top
-			if (x>=maxX && y>=minY && y<=maxY){
-				return true;
-			}
-			else{
-				return false;
-			}
-		}
-		GraphmathJS.onLeftBorder=function(x,y){
-			var maxX=this.left+this.left_margin
-			var maxY=this.top+this.height
-			var minY=this.top
-			if (x<=maxX && y>=minY && y<=maxY){
-				return true;
-			}
-			else{
-				return false;
-			}
-		}
-		GraphmathJS.onTopBorder=function(x,y){
-			var maxY=this.top
-			var minX=this.left+this.left_margin
-			var maxX=this.left+this.left_margin+this.width
-			if (y<=maxY && x>=minX && x<=maxX){
-				return true;
-			}
-			else{
-				return false;
-			}
-		}
-		GraphmathJS.onBottomBorder=function(x,y){
-			var maxY=this.top+this.height
-			var minX=this.left+this.left_margin
-			var maxX=this.left+this.left_margin+this.width
-			if (y>=maxY && x>minX && x<maxX){
-				return true;
-			}
-			else{
-				return false;
-			}
-		}
-		GraphmathJS.startCircle=function(){			
-			this.ox=this.attr('cx')
-			this.oy=this.attr('cy')
-		}
-		GraphmathJS.moveCircle=function(dx,dy){
-			if(GraphmathJS.insideGraph(this.ox+dx,this.oy+dy)){
-				this.data('ref').attr({'cx':this.ox+dx,'cy':this.oy+dy})
-			}
-			else if(GraphmathJS.onLeftBorder(this.ox+dx,this.oy+dy)){
-				this.data('ref').attr({'cx':GraphmathJS.left+GraphmathJS.left_margin,'cy':this.oy+dy})
-				
-			}
-			else if(GraphmathJS.onRightBorder(this.ox+dx,this.oy+dy)){
-				this.data('ref').attr({'cx':GraphmathJS.left+GraphmathJS.left_margin+GraphmathJS.width,'cy':this.oy+dy})
-				
-			}
-			else if(GraphmathJS.onTopBorder(this.ox+dx,this.oy+dy)){
-				this.data('ref').attr({'cx':this.ox+dx,'cy':GraphmathJS.top})
-				
-			}
-			else if(GraphmathJS.onBottomBorder(this.ox+dx,this.oy+dy)){
-				this.data('ref').attr({'cx':this.ox+dx,'cy':GraphmathJS.top+GraphmathJS.height})
-				
-			}
-		}
-		GraphmathJS.upCircle=function(){
-			var xy=GraphmathJS.setToMajorMinorGrid(this.attr('cx'),this.attr('cy'))
-			this.data('ref').attr({'cx':xy[0],'cy':xy[1]})
-			this.attr({'cx':xy[0],'cy':xy[1]})
-			GraphmathJS.overlappingPoints(this.data('ref'))
+	}
+	GraphmathJS.setClickOnGraph=function(paper){
+		GraphmathJS.box=GraphmathJS.major_grid.getBBox()
+		GraphmathJS.clickRect=paper.rect(GraphmathJS.box.x,GraphmathJS.box.y,GraphmathJS.box.width,GraphmathJS.box.height).toFront()
+		GraphmathJS.clickRect.attr({'opacity':0,'fill':'#fff'})
+		GraphmathJS.clickRect.click(GraphmathJS.grapClickHandle)			
+	}
+	GraphmathJS.setUnclickClickOnGraph=function(){
+		GraphmathJS.clickRect.unclick(GraphmathJS.grapClickHandle)
+		GraphmathJS.clickInstruction.hide()
+	}
+	GraphmathJS.grapClickHandle=function(e){
+		var dragCircles=GraphmathJS.getDragCircles()
+
+		if(GraphmathJS.max_drag_dot>dragCircles.length){
+			var xpos = e.offsetX==undefined?e.layerX:e.offsetX;
+			var ypos = e.offsetY==undefined?e.layerY:e.offsetY;
+			var xy=GraphmathJS.setToMajorMinorGrid(xpos,ypos)
+			var original=GraphmathJS.getPointCoordinateByXY(xy[0],xy[1])
+			GraphmathJS.dragCircle(GraphmathJS.paper,original.x,original.y,GraphmathJS.dragCircleTouch['defaultRadius'])
 			GraphmathJS.callBackCircleUp()
 		}
-		GraphmathJS.finCircle=function(){
-			this.data('ref').animate({'r':this.data('intialr')+GraphmathJS.dragCircleTouch['increaseradius']},50,">")
-			this.animate({'r':GraphmathJS.touchsense+this.data('intialr')+GraphmathJS.dragCircleTouch['increaseradius']},50,">");			
+	}
+	GraphmathJS.getPointCoordinateByXY=function(x,y){
+		return({'x':(x-(this.origineTranslationX+GraphmathJS.left+GraphmathJS.left_margin))/GraphmathJS.perx,'y':GraphmathJS.ystroke_count_major-(y-(GraphmathJS.top+this.origineTranslationY))/GraphmathJS.pery})
+	}
+	GraphmathJS.getPointCoordinate=function(point){
+		return({'x':(point.data('ref')[0].attr('cx')-(this.origineTranslationX+GraphmathJS.left+GraphmathJS.left_margin))/GraphmathJS.perx,'y':GraphmathJS.ystroke_count_major-(point.data('ref')[0].attr('cy')-(GraphmathJS.top+this.origineTranslationY))/GraphmathJS.pery})
+	}
+	GraphmathJS.overlappingPoints=function(next_drop){
+		var cps=GraphmathJS.circlePerSquere()
+		var cpsx=cps.cpsx
+		var cpsy=cps.cpsy
+		var circles = GraphmathJS.getCircles().slice(0);
+		//console.log(circles.indexOf(next_drop))
+		circles.splice(circles.indexOf(next_drop),1)
+	
+		for (var i=0;i<circles.length;i++) {
+		//for (var i in circles.length) {
+		    if (Raphael.isBBoxIntersect(next_drop.data('ref').getBBox(),circles[i].data('ref').getBBox())) {
+		    	var oldX=circles[i].data('ref')[0].attr('cx');
+		    	var oldY=circles[i].data('ref')[0].attr('cy');
+		        next_drop.data('ref').attr({'cx':oldX+((GraphmathJS.perx/cpsx)),'cy':oldY+((GraphmathJS.pery/cpsy))})
+		      	next_drop.attr({'cx':oldX+((GraphmathJS.perx/cpsx)),'cy':oldY+((GraphmathJS.pery/cpsy))})
+		    }
 		}
-		GraphmathJS.foutCircle=function(dx,dy){
-			this.data('ref').animate({'r':this.data('intialr')},50,">")
-			this.animate({'r':GraphmathJS.touchsense+this.data('intialr')},50,">");
-		}//handlerfunction
-		GraphmathJS.circlePerSquere=function(){
-			if (this.snap_to_major_grid){
-				return({'cpsx':GraphmathJS.xstroke_count_minor,'cpsy':GraphmathJS.ystroke_count_minor})
-			}
-			else{
-				return({'cpsx':1,'cpsy':1})
-			}
-		}
-		GraphmathJS.setToMajorMinorGrid=function(x,y){
-			var cps=GraphmathJS.circlePerSquere()
-			var cpsx=cps.cpsx
-			var cpsy=cps.cpsy
-			var mx=Math.round((x-GraphmathJS.left-GraphmathJS.left_margin)/(GraphmathJS.perx/cpsx));
-			var my=Math.round((y-GraphmathJS.top)/(GraphmathJS.pery/cpsy));
-			var aprX=mx*(GraphmathJS.perx/cpsx)+(GraphmathJS.left+GraphmathJS.left_margin);
-			var aprY=my*(GraphmathJS.pery/cpsy)+(GraphmathJS.top);
-			return([aprX,aprY])
-		}
-		GraphmathJS.callBackCircleUp=function(){
+	}
+	GraphmathJS.line=function(paper,x,y,x1,y1){
+		var xy=GraphmathJS.getActualCoordinate(x,y)
+		var xy1=GraphmathJS.getActualCoordinate(x1,y1)
+		var linePathset=[["M",xy.x,xy.y],["L",xy1.x,xy1.y]]
+		var line=paper.path(linePathset).attr(GraphmathJS.defaultLineParameter)
+		GraphmathJS.lines.push(line)
+		return line;
+	}
+	GraphmathJS.dragLine=function(paper,x,y,x1,y1){
+		R.customAttributes.linePathset = function() {};
+		R.customAttributes.pathCoOrdinateValue = function() {};
+		R.customAttributes.path = function() {};
+		R.customAttributes.circleSet = function() {};
+		R.customAttributes.lineBox = function() {};
+		var xy=GraphmathJS.getActualCoordinate(x,y)
+		var xy1=GraphmathJS.getActualCoordinate(x1,y1)
+		var linePathset=[["M",xy.x,xy.y],["L",xy1.x,xy1.y]]
+		var lineset=paper.set()
+		var line=paper.path(linePathset).attr(GraphmathJS.defaultLineParameter)
+		line.attr({'cursor':'move'})
+		var circle1=GraphmathJS.dragCircle(paper,x,y,6)
+		var circle2=GraphmathJS.dragCircle(paper,x1,y1,6)
+		var lineBoxPathSet=GraphmathJS.getBoxAroundLine([circle1,circle2])
+		var lineBox=paper.path(lineBoxPathSet).attr({'fill':'#fff','opacity':0,'cursor':'move'}).toBack();
+		lineset.push(line)
+		lineset.push(lineBox)
+		circle1.data('path',lineset)
+		circle2.data('path',lineset)
+		circle1.linePathset=linePathset
+		circle2.linePathset=linePathset
+		circle1.path=line
+		circle2.path=line
+		circle1.circleSet=[circle1,circle2]
+		circle2.circleSet=[circle1,circle2]
+		circle1.pathCoOrdinateValue=["M",xy.x,xy.y]
+		circle2.pathCoOrdinateValue=["L",xy1.x,xy1.y]
+		circle1.lineBox=lineBox
+		circle2.lineBox=lineBox
+		lineset.data({'pathset':linePathset,'refLine':lineset,'ends':[circle1,circle2]})
+		lineset.drag(GraphmathJS.moveLine,GraphmathJS.startLine,GraphmathJS.upLine)
+		GraphmathJS.dragLines.push(lineset)
+		GraphmathJS.lines.push(lineset)
+		return line;
+	}
+	GraphmathJS.moveLine=function(dx,dy){
+		//this.data('refLine').translate(dx-this.startx,dy-this.starty);
+		GraphmathJS.movingCircle(this.data('ends')[0],this.data('ends')[0][0].attr('cx'),this.data('ends')[0][0].attr('cy'),dx-this.startx,dy-this.starty)
+		GraphmathJS.movingCircle(this.data('ends')[1],this.data('ends')[1][0].attr('cx'),this.data('ends')[1][0].attr('cy'),dx-this.startx,dy-this.starty)
+		this.startx = dx;
+		this.starty = dy;
+	}
+	GraphmathJS.startLine=function(){
+		this.startx = 0;
+		this.starty = 0;
+	}
+	GraphmathJS.upLine=function(){
+		GraphmathJS.callBackDragLineUp()
+	}
+	GraphmathJS.callBackDragLineUp=function(){
 
+	}
+	GraphmathJS.drawPathLine=function(c){
+		var nowX=c.data('ref')[0].attr('cx');
+		var nowY=c.data('ref')[0].attr('cy');
+		var ps=c.data('ref').linePathset;
+		var pcv=c.data('ref').pathCoOrdinateValue;
+		var index=ps.toString().indexOf(pcv.toString());
+		var i;
+		if (index==0){
+			i=0;
 		}
-		GraphmathJS.setClickOnGraph=function(paper){
-			var box=GraphmathJS.major_grid.getBBox()
-			var r=paper.rect(box.x,box.y,box.width,box.height).toFront()
-			r.attr({'opacity':0,'fill':'#fff'})
-			r.click(GraphmathJS.grapClickHandle)			
+		else if(index>0){
+			i=1;
+		}		
+		ps[i][2]=nowY;
+		ps[i][1]=nowX;
+		c.data('ref').pathCoOrdinateValue[2]=nowY;
+		c.data('ref').pathCoOrdinateValue[1]=nowX;
+		c.data('ref').path.attr('path',ps);
+		var lineBoxPathSet=GraphmathJS.getBoxAroundLine(c.data('ref').circleSet)
+		c.data('ref').lineBox.attr({'path':lineBoxPathSet})
+		c.data('ref')[0].attr('cx',nowX)
+		c.data('ref')[0].attr('cy',nowY)
+		console.log(c.data('ref')[0].attr('cx'),c.data('ref')[0].attr('cy'))
+	}
+	GraphmathJS.getDragLines=function(){
+		return GraphmathJS.dragLines;
+	}
+	GraphmathJS.getLines=function(){
+		return GraphmathJS.lines;
+	}
+	GraphmathJS.getBoxAroundLine=function(c){
+		var m=GraphmathJS.findSlope([c[0].data('ref')[0].attr('cx'),c[0].data('ref')[0].attr('cy')],[c[1].data('ref')[0].attr('cx'),c[1].data('ref')[0].attr('cy')]);
+		var m1=(-1)*(1/m);
+		if(Math.abs(m1)==(Infinity)){
+			m1=99999999999999;
 		}
-		GraphmathJS.grapClickHandle=function(e){
-			var dragCircles=GraphmathJS.getDragCircles()
-			if(GraphmathJS.max_drag_dot>dragCircles.length){
-				var xy=GraphmathJS.setToMajorMinorGrid(e.offsetX, e.offsetY)
-				GraphmathJS.dragCircle(GraphmathJS.paper,xy[0],xy[1],GraphmathJS.dragCircleTouch['defaultRadius'])
-			}
+		if(Math.abs(m1)==(0)){
+			m1=0;
 		}
-		GraphmathJS.getPointCoordinate=function(point){
-			return({'x':(point.data('ref')[0].attr('cx')-(this.origineTranslationX+GraphmathJS.left+GraphmathJS.left_margin))/GraphmathJS.perx,'y':GraphmathJS.ystroke_count_major-(point.data('ref')[0].attr('cy')-(GraphmathJS.top+this.origineTranslationY))/GraphmathJS.pery})
+		var p12=GraphmathJS.findPointsOnLineDistance(c[0],GraphmathJS.touchsense,m1);
+		var p34=GraphmathJS.findPointsOnLineDistance(c[1],GraphmathJS.touchsense,m1);
+		var paset=[];
+		paset.push(["M",p12[0][0],p12[0][1]]);
+		paset.push(["L",p34[0][0],p34[0][1]]);
+		paset.push(["L",p34[1][0],p34[1][1]]);
+		paset.push(["L",p12[1][0],p12[1][1]]);
+		paset.push(["z"]);
+		return(paset);
+	}
+	GraphmathJS.findSlope=function(p1,p2){
+		var deltax=p2[0]-p1[0];
+		var deltay=p2[1]-p1[1];
+		var m=deltay/deltax;
+		if(Math.abs(m)==(Infinity)){
+			m=99999999999999;
 		}
-		GraphmathJS.overlappingPoints=function(next_drop){
-			var cps=GraphmathJS.circlePerSquere()
-			var cpsx=cps.cpsx
-			var cpsy=cps.cpsy
-			var circles = GraphmathJS.getCircles().slice(0);
-			//console.log(circles.indexOf(next_drop))
-			circles.splice(circles.indexOf(next_drop),1)
-		
-			for (var i=0;i<circles.length;i++) {
-			//for (var i in circles.length) {
-			    if (Raphael.isBBoxIntersect(next_drop.data('ref').getBBox(),circles[i].data('ref').getBBox())) {
-			    	var oldX=circles[i].data('ref')[0].attr('cx');
-			    	var oldY=circles[i].data('ref')[0].attr('cy');
-			        next_drop.data('ref').attr({'cx':oldX+((GraphmathJS.perx/cpsx)),'cy':oldY+((GraphmathJS.pery/cpsy))})
-			      	next_drop.attr({'cx':oldX+((GraphmathJS.perx/cpsx)),'cy':oldY+((GraphmathJS.pery/cpsy))})
-			    }
-			}
+		if(Math.abs(m)==(0)){
+			m=0;
 		}
-        return GraphmathJS;
-    }
-    if(typeof(GraphmathJS) === 'undefined'){
-        window.GraphmathJS = defineGraphmathJS();
-    }
-    else{
-        console.log("GraphmathJS already defined.");
-    }
-})(window);
+		return(m);
+	}
+	GraphmathJS.findPointsOnLineDistance=function(c,d,m){
+		var x0=c.data('ref')[0].attr('cx');
+		var y0=c.data('ref')[0].attr('cy');
+		var deno=(1/Math.sqrt(1+Math.pow(m,2)));
+		return([[x0+d*deno,y0+d*deno*m],[x0-d*deno,y0-d*deno*m]]);
+	}
+    return GraphmathJS;
+}
+
 function MergeRecursive(obj1, obj2) 
 {
 	var obj3 = {};

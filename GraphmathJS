@@ -430,6 +430,7 @@ function GraphmathJS(){
 		R.customAttributes.path = function() {};
 		R.customAttributes.circleSet = function() {};
 		R.customAttributes.lineBox = function() {};
+		R.customAttributes.lineBox = function() {};
 		var xy=GraphmathJS.getActualCoordinate(x,y)
 		var xy1=GraphmathJS.getActualCoordinate(x1,y1)
 		var linePathset=[["M",xy.x,xy.y],["L",xy1.x,xy1.y]]
@@ -454,6 +455,7 @@ function GraphmathJS(){
 		circle2.pathCoOrdinateValue=["L",xy1.x,xy1.y]
 		circle1.lineBox=lineBox
 		circle2.lineBox=lineBox
+
 		lineset.data({'pathset':linePathset,'refLine':lineset,'ends':[circle1,circle2]})
 		lineset.drag(GraphmathJS.moveLine,GraphmathJS.startLine,GraphmathJS.upLine)
 		GraphmathJS.dragLines.push(lineset)
@@ -499,7 +501,7 @@ function GraphmathJS(){
 		c.data('ref').lineBox.attr({'path':lineBoxPathSet})
 		c.data('ref')[0].attr('cx',nowX)
 		c.data('ref')[0].attr('cy',nowY)
-		console.log(c.data('ref')[0].attr('cx'),c.data('ref')[0].attr('cy'))
+		//console.log(c.data('ref')[0].attr('cx'),c.data('ref')[0].attr('cy'))
 	}
 	GraphmathJS.getDragLines=function(){
 		return GraphmathJS.dragLines;

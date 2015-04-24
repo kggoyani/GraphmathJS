@@ -7,12 +7,21 @@ function GraphmathJS(){
 	GraphmathJS.dragCircles=[]		
 	GraphmathJS.lines=[]
 	GraphmathJS.dragLines=[]
-	GraphmathJS.params = {'plot':{'clickEnable':true,'width':500,'height':400,'left':50,'top':50,'top-margin':20,'left-margin':20,'right-margin':20,'bottom-margin':20,'origin-quadrant':0,'max-drag-dot':4,'touchsense':16,'Origine-translation-grideWise-x':0,'Origine-translation-grideWise-y':0,'Origine-visible':true,'Origine-quadrant-place':3,'Origine-text-style':{'font-family':'verdana','font-size':16,'font-weight':'bold'}},'x-axis':{'stroke-count-major':10,'stroke-size': 5,'stroke-count-minor':5,'min':0,'max':10,'labels':[],'labels-margin':15,'minor-stroke-size':3,'strokes_visible':true,'snap-to-major-grid':true,'style':{"stroke": "#000000", "stroke-width": 2, "arrow-end": "open-long-wide", "arrow-start": "open-long-wide"},'stroke-style':{"stroke": "#F58220", "stroke-width": 2},'labels-style':[{"font-size": 12, "font-weight": "800"}],'labels-rotate':0,'x-title':'x-axis','x-title-margin':10,'x-title-style':{"font-size":16,"font-weight":600,"font-family":"verdana"}},'y-axis':{'stroke-size': 5,'minor-stroke-size':3,'min':0,'max':10,'stroke-count-major':10,'stroke-count-minor':5,'label-decimal':0,'labels':[],'labels-margin':15,'style':{"stroke": "#000000", "stroke-width": 2, "arrow-end": "open-long-wide", "arrow-start": "open-long-wide"},'stroke-style':{"stroke": "#F58220", "stroke-width": 2},'labels-style':[{"font-size": 12, "font-weight": "800"}],'labels-rotate':0,'title':'y-axis','title-margin':10,'title-style':{"font-size":16,"font-weight":600,"font-family":"verdana"}},'grid':{'visible':true,'minor-grid-visible':false,'major_style':{'stroke-opacity':0.5},'minor_style':{'stroke-opacity':0.1}}};
+	GraphmathJS.dragShapes=[]
+	GraphmathJS.bars=[]
+	GraphmathJS.dragBars=[]
+	GraphmathJS.params = {'plot':{'clickEnable':true,'width':500,'height':400,'left':50,'top':50,'top-margin':20,'left-margin':20,'right-margin':20,'bottom-margin':20,'origin-quadrant':0,'max-drag-dot':4,'touchsense':16,'Origine-translation-grideWise-x':0,'Origine-translation-grideWise-y':0,'Origine-visible':true,'Origine-quadrant-place':3,'Origine-text-style':{'font-family':'verdana','font-size':16,'font-weight':'bold'}},'x-axis':{'stroke-count-major':10,'stroke-size': 5,'stroke-count-minor':5,'min':0,'max':10,'labels':[],'labels-margin':15,'minor-stroke-size':3,'strokes_visible':true,'snap-to-major-grid':true,'style':{"stroke": "#000000", "stroke-width": 2, "arrow-end": "open-long-wide", "arrow-start": "open-long-wide"},'stroke-style':{"stroke": "#F58220", "stroke-width": 2},'labels-style':[{"font-size": 12, "font-weight": "800"}],'labels-rotate':0,'title-visible':false,'x-title':'x-axis','x-title-margin':30,'x-title-style':{"font-size":16,"font-weight":600,"font-family":"verdana"}},'y-axis':{'stroke-size': 5,'minor-stroke-size':3,'min':0,'max':10,'stroke-count-major':10,'stroke-count-minor':5,'label-decimal':0,'labels':[],'labels-margin':15,'style':{"stroke": "#000000", "stroke-width": 2, "arrow-end": "open-long-wide", "arrow-start": "open-long-wide"},'stroke-style':{"stroke": "#F58220", "stroke-width": 2},'labels-style':[{"font-size": 12, "font-weight": "800"}],'labels-rotate':0,'title':'y-axis','title-margin':30,'title-style':{"font-size":16,"font-weight":600,"font-family":"verdana"}},'grid':{'visible':true,'minor-grid-visible':false,'major_style':{'stroke-opacity':1,'stroke':'#C4D8E2'},'minor_style':{'stroke-opacity':0.1},'title-visible':false},'axis':{'stroke':'#000','opacity':1}};
 	GraphmathJS.circleParams={"fill":"#FFCD59","stroke":"#FDBD00"}
 	GraphmathJS.dragCircleParams={"fill":"#FFCD59","stroke":"#FFCD59"}
 	GraphmathJS.dragCircleTouch={'increaseradius':7,'defaultRadius':6}
 	GraphmathJS.defaultLineParameter={'stroke-width':3,'stroke':'#4aba8d'}
-	GraphmathJS.touchDevice=false
+	GraphmathJS.defaultShapeParameter={'stroke-width':3,'stroke':'#4aba8d','fill':'#fff','fill-opacity':0}
+	GraphmathJS.defaultBarParameter={'fill':'#00b9bc','stroke':'#00b9bc'}
+	GraphmathJS.defaultBarControlParameter={'height':10}
+	GraphmathJS.defaultMathFollowingParameter={'circleRadius':6,'left-stroke':'#0000FF','left-fill':'#0000FF','right-stroke':'#FF6600','right-fill':'#FF6600','right-box-width':80,'right-box-height':50}//
+	GraphmathJS.lineParams={'y-axis':{'dots':5,'title':'Items','title-margin':30,'title-style':{"font-size":16,"font-weight":600,"font-family":"verdana"}},'graph':{'right-margin':50,'Origine-translation-grideWise-y':0,'left':40,'top':10,'width':500,'height':200,'top-margin':20,'left-margin':50,'fitwithmajor':true,'cross-style':{'opacity':'0.2','fill':'#f0f','stroke-width':'3'}},line:{'stroke-size':5,'stroke-style':{"stroke": "#F58220", "stroke-width": 2},'labels-style':[{"font-size": 12, "font-weight": "800"}],'labels-rotate':0,'title-visible':false,'title':'x-axis','title-margin':30,'title-style':{"font-size":16,"font-weight":600,"font-family":"verdana"},'stroke-count-minor':5,'min':0,'max':10,'labels':[],'labels-margin':15,'minor-stroke-size':3,'strokes_visible':true,'snap-to-major-grid':true,'stroke-count-major':10,'line-style':{"stroke": "#000000", "stroke-width": 2, "arrow-end": "open-long-wide", "arrow-start": "open-long-wide"}},'rect':{'width':50,'height':30,'cros-size':10}}
+	GraphmathJS.touchDevice=false//'stroke-size':5
+	GraphmathJS.noInteraction=true;
 	var nAgt = navigator.userAgent;
 	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(nAgt) ) {
 		GraphmathJS.touchDevice= true;
@@ -40,9 +49,21 @@ function GraphmathJS(){
 		this.pery=this.height/this.ystroke_count_major;
 		this.origineTranslationGrideWiseX=this.params['plot']['Origine-translation-grideWise-x']
 		this.origineTranslationGrideWiseY=this.params['plot']['Origine-translation-grideWise-y']
-		this.clickEnable=this.params['plot']['clickEnable']
-		this.origineTranslationY=this.origineTranslationGrideWiseX*this.pery
-		this.origineTranslationX=this.origineTranslationGrideWiseY*this.perx			
+		this.clickEnable=this.params['plot']['clickEnable'];
+		this.origineTranslationY=this.origineTranslationGrideWiseX*this.pery;
+		this.origineTranslationX=this.origineTranslationGrideWiseY*this.perx;
+		this.yAxisLabels=this.params["y-axis"]["labels"];
+		this.xAxisLabels=this.params["x-axis"]["labels"];
+		this.xAxisMax=this.params["x-axis"]["max"];
+		this.xAxisMin=this.params["x-axis"]["min"];
+		this.yAxisMax=this.params["y-axis"]["max"];
+		this.yAxisMin=this.params["y-axis"]["min"];
+		this.yAxisLabelsMargin=this.params["y-axis"]["labels-margin"];
+		this.xAxisLabelsMargin=this.params["x-axis"]["labels-margin"];
+		this.xAxisLabelsRotate=this.params["x-axis"]["labels-rotate"]
+		this.xAxisLabelsStyle=this.params["x-axis"]["labels-style"]
+		this.yAxisLabelsRotate=this.params["y-axis"]["labels-rotate"]
+		this.yAxisLabelsStyle=this.params["y-axis"]["labels-style"]
 	}
 	GraphmathJS.drawCoOrdinateSystem=function(paper){
 		this.drawAxies(paper);
@@ -64,28 +85,29 @@ function GraphmathJS(){
 		else if(this.params["plot"]["Origine-quadrant-place"]==4)
 			paper.text(this.origineTranslationX+this.left_margin+this.left+this.origineXGap,this.height+(this.top_margin+this.top+this.origineTranslationY-this.bottom_margin+this.origineYGap),"0").attr(this.params["plot"]["Origine-text-style"])
 	}
-	GraphmathJS.writeLabels=function(paper){
-		this.labelsx=this.params["x-axis"]["labels"];
+	GraphmathJS.writeXLabels=function(paper){
+		this.labelsx=GraphmathJS.xAxisLabels
 		if(this.labelsx.length<=0){
-			var step=(this.params["x-axis"]["max"]-this.params["x-axis"]["min"])/this.xstroke_count_major
-			for (var i=this.origineTranslationGrideWiseY-1;i>=0;i--){
+			var step=(GraphmathJS.xAxisMax-this.xAxisMin)/this.xstroke_count_major;
+			for (var i=this.origineTranslationGrideWiseY;i>=0;i--){
 				if(i==0)
 					this.labelsx.push('')
 				else
 					this.labelsx.push((i)*step*(-1))
 			}
-			for (var i=this.origineTranslationGrideWiseY;i<=this.xstroke_count_major;i++){
+			for (var i=this.origineTranslationGrideWiseY;i<this.xstroke_count_major;i++){
 				this.labelsx.push((i+1-this.origineTranslationGrideWiseY)*step)
 			}
 		}
 		for (var i=0;i<this.xmajor_grid_pointset.length;i++){
-			paper.text(this.xmajor_grid_pointset[i][0],this.xmajor_grid_pointset[i][1]+this.params["x-axis"]["labels-margin"]+this.origineTranslationY,this.labelsx[i]).rotate(this.params["x-axis"]["labels-rotate"]).attr(this.params["x-axis"]["labels-style"])
+			paper.text(this.xmajor_grid_pointset[i][0],this.xmajor_grid_pointset[i][1]+this.xAxisLabelsMargin+this.origineTranslationY,this.labelsx[i]).rotate(this.xAxisLabelsRotate).attr(this.xAxisLabelsStyle)
 		}
-		this.labelsy=this.params["y-axis"]["labels"];
+	}
+	GraphmathJS.writeYLabels=function(paper){
+		this.labelsy=GraphmathJS.yAxisLabels;
 		if(this.labelsy.length<=0){
-			var step=(this.params["y-axis"]["max"]-this.params["y-axis"]["min"])/this.ystroke_count_major
-						
-			for (var i=this.origineTranslationGrideWiseX*(-1);i>=0;i--){
+			var step=(GraphmathJS.yAxisMax-this.yAxisMin)/this.ystroke_count_major;
+			for (var i=this.origineTranslationGrideWiseX*(-1)+1;i>=0;i--){				
 				if(i==0)
 					this.labelsy.push('')
 				else
@@ -96,15 +118,31 @@ function GraphmathJS(){
 			}
 		}
 		for (var i=0;i<this.ymajor_grid_pointset.length;i++){
-			paper.text(this.ymajor_grid_pointset[i][0]+this.origineTranslationX-this.params["y-axis"]["labels-margin"],this.ymajor_grid_pointset[i][1],this.labelsy[this.ymajor_grid_pointset.length-i]).rotate(this.params["y-axis"]["labels-rotate"]).attr(this.params["y-axis"]["labels-style"])
+			paper.text(this.ymajor_grid_pointset[i][0]+this.origineTranslationX-this.yAxisLabelsMargin,this.ymajor_grid_pointset[i][1],this.labelsy[this.ymajor_grid_pointset.length-i]).rotate(this.yAxisLabelsRotate).attr(this.yAxisLabelsStyle)
 		}
+	}
+	GraphmathJS.writeLabels=function(paper){
+		GraphmathJS.writeXLabels(paper);
+		GraphmathJS.writeYLabels(paper);
+		if(GraphmathJS.params['x-axis']['title-visible'])
+			GraphmathJS.writeXAxisTitle(paper)
+		if(GraphmathJS.params['y-axis']['title-visible'])
+			GraphmathJS.writeYAxisTitle(paper)
+	}
+	GraphmathJS.writeXAxisTitle=function(paper){		
+		GraphmathJS.xTitle=paper.text(GraphmathJS.left+GraphmathJS.left_margin+GraphmathJS.width/2,GraphmathJS.top+GraphmathJS.height+GraphmathJS.params['x-axis']['x-title-margin'],GraphmathJS.params['x-axis']['x-title']).attr(GraphmathJS.params['x-axis']['x-title-style'])
+		return GraphmathJS.xTitle;
+	}
+	GraphmathJS.writeYAxisTitle=function(paper){
+		GraphmathJS.yTitle=paper.text(GraphmathJS.left+GraphmathJS.left_margin-GraphmathJS.params['y-axis']['title-margin'],GraphmathJS.top+GraphmathJS.height/2,GraphmathJS.params['y-axis']['title']).attr(GraphmathJS.params['y-axis']['title-style']).rotate(-90,GraphmathJS.left+GraphmathJS.left_margin-GraphmathJS.params['y-axis']['title-margin'],GraphmathJS.top+GraphmathJS.height/2)
+		return GraphmathJS.yTitle;
 	}
 	GraphmathJS.drawStrokes=function(paper){
 		this.drawMajorStroke(paper);
 		if (this.params["grid"]["minor-grid-visible"])
 			this.drawMinorStroke(paper);
 	}
-	GraphmathJS.drawMajorStroke=function(paper){			
+	GraphmathJS.drawMajorStroke=function(paper){
 		var pointset=[]
 		for (var i=0;i<this.xmajor_grid_pointset.length;i++){
 			pointset.push(["M",this.xmajor_grid_pointset[i][0]+this.transformXAxies[0],this.xmajor_grid_pointset[i][1]-this.params['x-axis']['stroke-size']+this.transformXAxies[1]])
@@ -114,7 +152,8 @@ function GraphmathJS(){
 			pointset.push(["M",this.ymajor_grid_pointset[i][0]-this.params['x-axis']['stroke-size']+this.transformYAxies[0],this.ymajor_grid_pointset[i][1]+this.transformYAxies[1]])
 			pointset.push(["L",this.ymajor_grid_pointset[i][0]+this.params['x-axis']['stroke-size']+this.transformYAxies[0],this.ymajor_grid_pointset[i][1]+this.transformYAxies[1]])
 		}
-		paper.path(pointset).attr(this.params['x-axis']['stroke-style']);
+		GraphmathJS.majorStroke=paper.path(pointset).attr(this.params['x-axis']['stroke-style']);
+		return GraphmathJS.majorStroke;
 	}
 	GraphmathJS.drawMinorStroke=function(paper){
 		var pointSet=[]
@@ -126,7 +165,8 @@ function GraphmathJS(){
 			pointSet.push(["M",this.yminor_grid_pointset[i][0]-this.params['x-axis']['minor-stroke-size']+this.transformYAxies[0],this.yminor_grid_pointset[i][1]+this.transformYAxies[1]])
 			pointSet.push(["L",this.yminor_grid_pointset[i][0]+this.params['x-axis']['minor-stroke-size']+this.transformYAxies[0],this.yminor_grid_pointset[i][1]+this.transformYAxies[1]])
 		}
-		paper.path(pointSet).attr(this.params['x-axis']['stroke-style']);
+		GraphmathJS.minorStroke=paper.path(pointSet).attr(this.params['x-axis']['stroke-style']);
+		return GraphmathJS.minorStroke
 	}
 	GraphmathJS.drawGrids=function(paper){
 		if(this.params['grid']['minor-grid-visible'])
@@ -152,10 +192,11 @@ function GraphmathJS(){
 			}
 		}
 		this.minor_grid=paper.path(pointset).attr(this.params['grid']['minor_style'])
+		return this.minor_grid
 	}
 	GraphmathJS.drawMajorGrid=function(paper){
 		var pointset=[]
-		this.xmajor_grid_pointset=[]
+		this.xmajor_grid_pointset=[[this.left+this.left_margin,this.top+this.height]]
 		this.ymajor_grid_pointset=[]
 		pointset.push(["M",this.left+this.left_margin,this.top]);
 		pointset.push(["L",this.left+this.left_margin,this.top+this.height]);
@@ -171,11 +212,13 @@ function GraphmathJS(){
 		}
 		pointset.push(["M",this.left+this.left_margin,this.top+this.pery*(i)]);
 		pointset.push(["L",this.left+this.left_margin+this.width,this.top+this.pery*(i)]);
+		this.ymajor_grid_pointset.push([this.left+this.left_margin,this.top+this.pery*(i)])
 		this.major_grid=paper.path(pointset).attr(this.params['grid']['major_style']);
 		if (this.clickEnable){
 			GraphmathJS.setClickOnGraph(paper)
 			GraphmathJS.clickInstruction=paper.text(GraphmathJS.left+GraphmathJS.left_margin+GraphmathJS.width/2,GraphmathJS.top+GraphmathJS.height/2,"Click to add vertices").attr({'font-family':'verdana','font-size':25,'fill':'#949096'}).toBack();
 		}
+		return this.major_grid;
 	}
 	GraphmathJS.drawAxies=function(paper){
 		this.yaxis;
@@ -183,26 +226,29 @@ function GraphmathJS(){
 		this.transformXAxies=[]
 		this.transformYAxies=[]
 		if(this.origin_quadrant==0){
-			this.xaxis=paper.path([["M",this.left,this.top+this.height+this.origineTranslationY],["L",this.left+this.left_margin+this.width+this.right_margin,this.top+this.height+this.origineTranslationY]]);
-			this.yaxis=paper.path([["M",this.left+this.left_margin+this.origineTranslationX,this.top-this.top_margin],["L",this.left+this.left_margin+this.origineTranslationX,this.top+this.height+this.bottom_margin]]);
+			this.xaxis=paper.path([["M",this.left,this.top+this.height+this.origineTranslationY],["L",this.left+this.left_margin+this.width+this.right_margin,this.top+this.height+this.origineTranslationY]]).attr(this.params['axis']);
+			this.yaxis=paper.path([["M",this.left+this.left_margin+this.origineTranslationX,this.top-this.top_margin],["L",this.left+this.left_margin+this.origineTranslationX,this.top+this.height+this.bottom_margin]]).attr(this.params['axis']);
 			this.transformXAxies=[0,this.origineTranslationY]
 			this.transformYAxies=[this.origineTranslationX,0]
 		}
 		else{
-			this.xaxis=paper.path([["M",this.left,this.top+this.height/2+this.origineTranslationY],["L",this.left+this.left_margin+this.width+this.right_margin,this.top+this.height/2+this.origineTranslationY]]);
-			this.yaxis=paper.path([["M",this.left+this.left_margin+this.width/2+this.origineTranslationX,this.top-this.top_margin],["L",this.left+this.left_margin+this.width/2+this.origineTranslationX,this.top+this.height+this.bottom_margin]]);
+			this.xaxis=paper.path([["M",this.left,this.top+this.height/2+this.origineTranslationY],["L",this.left+this.left_margin+this.width+this.right_margin,this.top+this.height/2+this.origineTranslationY]]).attr(this.params['axis']);
+			this.yaxis=paper.path([["M",this.left+this.left_margin+this.width/2+this.origineTranslationX,this.top-this.top_margin],["L",this.left+this.left_margin+this.width/2+this.origineTranslationX,this.top+this.height+this.bottom_margin]]).attr(this.params['axis']);
 			this.transformXAxies=[0,-this.height/2+this.origineTranslationY]
 			this.transformYAxies=[this.width/2+this.origineTranslationX,0]
 		}
 		this.xaxis.attr(this.params['x-axis']['style']);
 		this.yaxis.attr(this.params['y-axis']['style']);
+		return ([this.xaxis,this.yaxis]);
 	}
 	GraphmathJS.circle=function(paper,cx,cy,r){
 		var actualX=GraphmathJS.getActualCoordinate(cx,cy)
 		var xy=GraphmathJS.setToMajorMinorGrid(actualX.x, actualX.y)
+		var cset=paper.set()
 		var c=paper.circle(xy[0],xy[1],r).attr(this.circleParams)
-		c.data('ref',c)
-		GraphmathJS.circles.push(c)
+		cset.push(c)
+		cset.data('ref',c)
+		GraphmathJS.circles.push(cset)
 		return c
 	}
 	GraphmathJS.getCircles=function(){
@@ -240,15 +286,16 @@ function GraphmathJS(){
 		GraphmathJS.circles.push(touchCircleSet)
 		GraphmathJS.dragCircles.push(touchCircleSet)
 		touchCircleSet.toFront()
+		GraphmathJS.demoInteractionCircle(paper,touchCircleSet)
 		return touchCircleSet
 	}
 	GraphmathJS.onDragOverCircle=function(){
 	}
 	GraphmathJS.getMaxXY=function(){
-		return ([this.left+this.left_margin+this.width,this.top+this.top_margin+this.height])
+		return ([this.left+this.left_margin+this.width,this.top+this.height])
 	}
 	GraphmathJS.getMinXY=function(){
-		return ([this.left+this.left_margin,this.top+this.top_margin])
+		return ([this.left+this.left_margin,this.top])
 	}
 	GraphmathJS.insideGraph=function(x,y){
 		var startXY=this.getMinXY();
@@ -327,6 +374,9 @@ function GraphmathJS(){
 		if(typeof cur.path !== "undefined"){
 			GraphmathJS.drawPathLine(cur)
 		}
+		if(typeof cur.shape !== "undefined"){
+			GraphmathJS.drawShapeLine(cur)
+		}
 	}
 	GraphmathJS.moveCircle=function(dx,dy){
 		GraphmathJS.movingCircle(this.data('ref'),this.ox,this.oy,dx,dy)
@@ -339,11 +389,15 @@ function GraphmathJS(){
 		if(typeof this.data('ref').path !== "undefined"){
 			GraphmathJS.drawPathLine(this.data('ref'))
 		}
+		if(typeof this.data('ref').shape !== "undefined"){
+			GraphmathJS.drawShapeLine(this.data('ref'))
+		}
 		GraphmathJS.callBackCircleUp()
 	}
 	GraphmathJS.finCircle=function(){
+		GraphmathJS.noInteraction=false;
 		this.data('ref').animate({'r':this.data('intialr')+GraphmathJS.dragCircleTouch['increaseradius']},50,">")
-		this.animate({'r':GraphmathJS.touchsense+this.data('intialr')+GraphmathJS.dragCircleTouch['increaseradius']},50,">");			
+		this.animate({'r':GraphmathJS.touchsense+this.data('intialr')+GraphmathJS.dragCircleTouch['increaseradius']},50,">");
 	}
 	GraphmathJS.foutCircle=function(dx,dy){
 		this.data('ref').animate({'r':this.data('intialr')},50,">")
@@ -381,8 +435,7 @@ function GraphmathJS(){
 		GraphmathJS.clickInstruction.hide()
 	}
 	GraphmathJS.grapClickHandle=function(e){
-		var dragCircles=GraphmathJS.getDragCircles()
-
+		var dragCircles=GraphmathJS.getDragCircles();
 		if(GraphmathJS.max_drag_dot>dragCircles.length){
 			var xpos = e.offsetX==undefined?e.layerX:e.offsetX;
 			var ypos = e.offsetY==undefined?e.layerY:e.offsetY;
@@ -404,8 +457,7 @@ function GraphmathJS(){
 		var cpsy=cps.cpsy
 		var circles = GraphmathJS.getCircles().slice(0);
 		//console.log(circles.indexOf(next_drop))
-		circles.splice(circles.indexOf(next_drop),1)
-	
+		circles.splice(circles.indexOf(next_drop),1)	
 		for (var i=0;i<circles.length;i++) {
 		//for (var i in circles.length) {
 		    if (Raphael.isBBoxIntersect(next_drop.data('ref').getBBox(),circles[i].data('ref').getBBox())) {
@@ -425,12 +477,6 @@ function GraphmathJS(){
 		return line;
 	}
 	GraphmathJS.dragLine=function(paper,x,y,x1,y1){
-		R.customAttributes.linePathset = function() {};
-		R.customAttributes.pathCoOrdinateValue = function() {};
-		R.customAttributes.path = function() {};
-		R.customAttributes.circleSet = function() {};
-		R.customAttributes.lineBox = function() {};
-		R.customAttributes.lineBox = function() {};
 		var xy=GraphmathJS.getActualCoordinate(x,y)
 		var xy1=GraphmathJS.getActualCoordinate(x1,y1)
 		var linePathset=[["M",xy.x,xy.y],["L",xy1.x,xy1.y]]
@@ -455,7 +501,6 @@ function GraphmathJS(){
 		circle2.pathCoOrdinateValue=["L",xy1.x,xy1.y]
 		circle1.lineBox=lineBox
 		circle2.lineBox=lineBox
-
 		lineset.data({'pathset':linePathset,'refLine':lineset,'ends':[circle1,circle2]})
 		lineset.drag(GraphmathJS.moveLine,GraphmathJS.startLine,GraphmathJS.upLine)
 		GraphmathJS.dragLines.push(lineset)
@@ -463,7 +508,6 @@ function GraphmathJS(){
 		return line;
 	}
 	GraphmathJS.moveLine=function(dx,dy){
-		//this.data('refLine').translate(dx-this.startx,dy-this.starty);
 		GraphmathJS.movingCircle(this.data('ends')[0],this.data('ends')[0][0].attr('cx'),this.data('ends')[0][0].attr('cy'),dx-this.startx,dy-this.starty)
 		GraphmathJS.movingCircle(this.data('ends')[1],this.data('ends')[1][0].attr('cx'),this.data('ends')[1][0].attr('cy'),dx-this.startx,dy-this.starty)
 		this.startx = dx;
@@ -546,8 +590,406 @@ function GraphmathJS(){
 		var deno=(1/Math.sqrt(1+Math.pow(m,2)));
 		return([[x0+d*deno,y0+d*deno*m],[x0-d*deno,y0-d*deno*m]]);
 	}
+	GraphmathJS.shape=function(paper,points){
+		var circleSet=paper.set()
+		var copoints=[]
+		var circles=[]
+		for (var i=0;i<points;i++){
+			var xy=GraphmathJS.getActualCoordinate(0,0)
+			var c=GraphmathJS.dragCircle(paper,0,0,6)
+			circles.push(c)
+			var p;
+			if(i==0)
+				p=["M",xy.x,xy.y]
+			else
+				p=["L",xy.x,xy.y]
+			copoints.push(p)
+			c.circleCoOrdinateValue=p			
+		}
+		copoints.push(["z"])
+		var path=paper.path(copoints).attr(GraphmathJS.defaultShapeParameter)
+		circleSet.push(path)
+		circleSet.points=circles.length
+		circleSet.data({'ends':circles,'ref':circleSet})
+		for (var i=0;i<circles.length;i++){
+			circles[i].shape=path
+			circles[i].pathPathset=copoints
+			circles[i].toFront()
+		}
+		circleSet.attr({'cursor':'move'})
+		circleSet.drag(GraphmathJS.moveShape,GraphmathJS.startShape,GraphmathJS.upShape)
+		GraphmathJS.dragShapes.push(circleSet)
+		return(circleSet)
+	}
+	GraphmathJS.getShapes=function(){
+		return GraphmathJS.dragShapes
+	}
+	GraphmathJS.moveShape=function(dx,dy){
+		for(var i=0;i<this.data('ref').points;i++){
+			GraphmathJS.movingCircle(this.data('ends')[i],this.data('ends')[i][0].attr('cx'),this.data('ends')[i][0].attr('cy'),dx-this.startx,dy-this.starty)
+		}
+		this.startx = dx;
+		this.starty = dy;
+	}
+	GraphmathJS.startShape=function(){
+		this.startx = 0;
+		this.starty = 0
+	}
+	GraphmathJS.upShape=function(){	
+	}
+	GraphmathJS.drawShapeLine=function(c){
+		var nowX=c.data('ref')[0].attr('cx');
+		var nowY=c.data('ref')[0].attr('cy');
+		var ps=c.data('ref').pathPathset;
+		var pcv=c.data('ref').circleCoOrdinateValue;
+		var index=ps.indexOf(pcv)
+		ps[index][2]=nowY;
+		ps[index][1]=nowX;
+		c.data('ref').circleCoOrdinateValue[2]=nowY;
+		c.data('ref').circleCoOrdinateValue[1]=nowX;
+		c.data('ref').shape.attr('path',ps);
+		c.data('ref')[0].attr('cx',nowX);
+		c.data('ref')[0].attr('cy',nowY);
+	}
+	GraphmathJS.drawBar=function(paper,x,y,width,height){
+		var xy=GraphmathJS.getActualCoordinate(x,y)
+		var rect=paper.rect(xy.x-width*GraphmathJS.perx/2,xy.y-height*GraphmathJS.pery,width*GraphmathJS.perx,height*GraphmathJS.pery).attr(GraphmathJS.defaultBarParameter)
+		GraphmathJS.bars.push(rect)
+		return rect;
+	}
+	GraphmathJS.drawDragBar=function(paper,x,y,width,height){
+		var dragBar=paper.set()
+		var xy=GraphmathJS.getActualCoordinate(x,y)
+		var rect=paper.rect(xy.x-width*GraphmathJS.perx/2,xy.y-height*GraphmathJS.pery,width*GraphmathJS.perx,height*GraphmathJS.pery).attr(GraphmathJS.defaultBarParameter)
+		var controller=paper.rect(xy.x-width*GraphmathJS.perx/2,xy.y-height*GraphmathJS.pery- GraphmathJS.defaultBarControlParameter['height']/2 ,width*GraphmathJS.perx,GraphmathJS.defaultBarControlParameter['height']).attr({'cursor':'n-resize','fill':'#f00','stroke':'#f00'})
+		var controllerTouch=paper.rect(xy.x-width*GraphmathJS.perx/2,xy.y-(height)*GraphmathJS.pery- GraphmathJS.defaultBarControlParameter['height']/2-GraphmathJS.touchsense ,width*GraphmathJS.perx,GraphmathJS.defaultBarControlParameter['height']+GraphmathJS.touchsense*2).attr({'cursor':'n-resize','stroke':'#000','fill':'#fff','opacity':0})
+		controllerTouch.rect=rect;
+		controllerTouch.controller=controller
+		dragBar.push(controllerTouch)
+		dragBar.push(rect);
+		dragBar.push(controller);
+		dragBar.yVal=''
+		GraphmathJS.dragBars.push(dragBar)
+		controllerTouch.dragBar=dragBar
+		controllerTouch.drag(GraphmathJS.barMove,GraphmathJS.barStart,GraphmathJS.barUp)
+		return rect;
+	}
+	GraphmathJS.getDragbars=function(){
+		return GraphmathJS.dragBars;
+	}
+	GraphmathJS.barMove=function(dx,dy){
+		if(GraphmathJS.insideGraphBar(this.oy+dy)){
+			this.attr({'y':this.oy+dy})
+			this.rect.attr({'height':this.height+(-1)*dy,'y':this.oyy+dy})
+			this.controller.attr({'y':this.oy+dy+GraphmathJS.touchsense})
+		}
+	}
+	GraphmathJS.barStart=function(){
+		this.oy=this.attr('y')
+		this.height=this.rect.attr('height')
+		this.oyy=this.rect.attr('y')
+	}
+	GraphmathJS.barUp=function(){
+		var y=GraphmathJS.setBarMajorMinorGrid(this.rect.attr('y'))
+		this.attr({'y':y})
+		this.rect.attr({'y':y+GraphmathJS.touchsense})
+		this.rect.attr({'height': GraphmathJS.height-y+GraphmathJS.top+GraphmathJS.top_margin- GraphmathJS.touchsense*2-GraphmathJS.defaultBarControlParameter['height']/2 })		
+		this.dragBar.yVal=Math.round((GraphmathJS.height-y+GraphmathJS.top+GraphmathJS.top_margin- GraphmathJS.touchsense*2-GraphmathJS.defaultBarControlParameter['height']/2)/GraphmathJS.pery)
+		this.controller.attr({'y':y+GraphmathJS.touchsense})
+		GraphmathJS.callBackUpBar();
+	}
+	
+	GraphmathJS.callBackUpBar=function(){
+		
+	}
+	GraphmathJS.insideGraphBar=function(y){
+		if(y>(GraphmathJS.top- GraphmathJS.top_margin) && y<(GraphmathJS.top+GraphmathJS.height- GraphmathJS.top_margin)){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	GraphmathJS.setBarMajorMinorGrid=function(y){
+		var cps=GraphmathJS.circlePerSquere()
+		var cpsy=cps.cpsy		
+		var my=Math.round((y-GraphmathJS.top)/(GraphmathJS.pery/cpsy));
+		var aprY=my*(GraphmathJS.pery/cpsy)+(GraphmathJS.top);
+		return(aprY-GraphmathJS.touchsense-GraphmathJS.defaultBarControlParameter['height']/2)
+	}
+	GraphmathJS.unDragBar=function(){
+		var k=GraphmathJS.getDragbars();
+		for (var i=0;i<k.length;i++){
+			k[i].hide()
+		}
+	}
+	GraphmathJS.drawMatchTheFollowing=function(paper,x,y,width,saparationHeight,number){
+		var leftCircles=[]
+		var leftDragCircles=[]
+		var rightCircles=[]
+		var paths=[]
+		var pathSets=[]
+		var touchCirclesSets=[]
+		GraphmathJS.rectsPath=[]
+		for (var i=0;i<number;i++){
+			rightCircles.push(paper.circle(x+width,y+saparationHeight*i,GraphmathJS.defaultMathFollowingParameter['circleRadius']).attr({'stroke':GraphmathJS.defaultMathFollowingParameter['right-stroke'],'fill':GraphmathJS.defaultMathFollowingParameter['right-fill']}))
+			pathSets.push([["M",x,y+saparationHeight*i],["L",x,y+saparationHeight*i]])
+			paths.push(paper.path(pathSets[i]))
+			leftCircles.push(paper.circle(x,y+saparationHeight*i,GraphmathJS.defaultMathFollowingParameter['circleRadius']).attr({'stroke':GraphmathJS.defaultMathFollowingParameter['left-stroke'],'fill':GraphmathJS.defaultMathFollowingParameter['left-fill']}))
+			leftDragCircles.push(paper.circle(x,y+saparationHeight*i,GraphmathJS.defaultMathFollowingParameter['circleRadius']).attr({'stroke':GraphmathJS.defaultMathFollowingParameter['left-stroke'],'fill':GraphmathJS.defaultMathFollowingParameter['left-fill']}))
+			touchCirclesSets.push(paper.circle(x,y+saparationHeight*i,GraphmathJS.defaultMathFollowingParameter['circleRadius']+ GraphmathJS.touchsense).attr({'fill':'#fff','opacity':0,'cursor':'move'}))
+			paths[i].pathset=pathSets[i]			
+			GraphmathJS.rectsPath.push(paper.rect(x+width-GraphmathJS.defaultMathFollowingParameter['right-box-width']/2,y+saparationHeight*i-GraphmathJS.defaultMathFollowingParameter['right-box-height']/2,GraphmathJS.defaultMathFollowingParameter['right-box-width'],GraphmathJS.defaultMathFollowingParameter['right-box-height']).attr({'stroke-opacity':0}))
+			GraphmathJS.rectsPath[i].origine=leftCircles[i]
+			leftDragCircles[i].origine=leftCircles[i]
+			leftDragCircles[i].path=paths[i]
+			touchCirclesSets[i].circleref=leftDragCircles[i]
+			touchCirclesSets[i].ref=touchCirclesSets[i]
+			touchCirclesSets[i].ansIndex=''
+			touchCirclesSets[i].drag(GraphmathJS.moveMTF,GraphmathJS.startMTF,GraphmathJS.upMTF)
+		}
+		GraphmathJS.circleSetsMTP=touchCirclesSets
+		return touchCirclesSets;
+	}
+	GraphmathJS.moveMTF=function(dx,dy){
+		this.attr({'cx':this.ox+dx,'cy':this.oy+dy})
+		this.circleref.attr({'cx':this.ox+dx,'cy':this.oy+dy})		
+		GraphmathJS.drawPathMTF(this.circleref.path,this.ox+dx,this.oy+dy)
+	}
+	GraphmathJS.startMTF=function(){
+		this.ox=this.attr('cx');
+		this.oy=this.attr('cy');
+		this.circleref.toFront();
+		this.toFront();
+		this.circleref.attr({'cursor':'move'})
+	}
+	GraphmathJS.upMTF=function(){
+		var t=GraphmathJS.InsideSquare(this.attr('cx'),this.attr('cy'))		
+		if(t=='outside'){
+			this.attr({'cx':this.circleref.origine.attr('cx'),'cy':this.circleref.origine.attr('cy')})
+			this.circleref.attr({'cx':this.circleref.origine.attr('cx'),'cy':this.circleref.origine.attr('cy')})		
+			GraphmathJS.drawPathMTF(this.circleref.path,this.circleref.origine.attr('cx'),this.circleref.origine.attr('cy'))
+		}
+		else{			
+			this.ansIndex=t[1]
+			this.attr({'cx':t[0].attr('x')+GraphmathJS.defaultMathFollowingParameter['right-box-width']/2,'cy':t[0].attr('y')+GraphmathJS.defaultMathFollowingParameter['right-box-height']/2})
+			this.circleref.attr({'cx':t[0].attr('x')+GraphmathJS.defaultMathFollowingParameter['right-box-width']/2,'cy':t[0].attr('y')+GraphmathJS.defaultMathFollowingParameter['right-box-height']/2})		
+			GraphmathJS.drawPathMTF(this.circleref.path,t[0].attr('x')+GraphmathJS.defaultMathFollowingParameter['right-box-width']/2,t[0].attr('y')+GraphmathJS.defaultMathFollowingParameter['right-box-height']/2)			
+		}
+		GraphmathJS.callBackUpMTF();
+	}
+	GraphmathJS.drawPathMTF=function(path,x,y){
+		path.pathset[1][1]=x;
+		path.pathset[1][2]=y;
+		path.attr('path',path.pathset);
+	}
+	GraphmathJS.InsideSquare=function(x,y){
+		var isInside='outside';
+		for (var i=0;i<(GraphmathJS.rectsPath.length);i++){
+			if(GraphmathJS.rectsPath[i].isPointInside(x,y)){
+				return([GraphmathJS.rectsPath[i],i]);
+			}
+		}
+		return(isInside)
+	}
+	GraphmathJS.callBackUpMTF=function(){
+
+	}
+	GraphmathJS.getCirclesMTF=function(){
+		return(GraphmathJS.circleSetsMTP)
+	}
+	GraphmathJS.drawLinePlot=function(paper,params){
+		params = params || {};
+		this.lineParams=MergeRecursive(this.lineParams,params);
+		this.xAxisLabels=this.lineParams["line"]["labels"];
+		this.xAxisMax=this.lineParams["line"]["max"];
+		this.xAxisMin=this.lineParams["line"]["min"];
+		this.xAxisLabelsMargin=this.lineParams["line"]["labels-margin"];
+		this.xAxisLabelsRotate=this.lineParams["line"]["labels-rotate"];
+		this.xAxisLabelsStyle=this.lineParams["line"]["labels-style"];
+		this.width=this.lineParams['graph']['width'];
+		this.height=this.lineParams['graph']['height'];
+		this.left=this.lineParams['graph']['left']; 
+		this.top=this.lineParams['graph']['top'];
+		this.top_margin=this.lineParams['graph']['top-margin'];
+		this.left_margin=this.lineParams['graph']['left-margin'];
+		this.right_margin=this.lineParams['graph']['right-margin'];
+		this.xstroke_count_major=this.lineParams['line']['stroke-count-major'];
+		this.origineTranslationGrideWiseY=this.lineParams['graph']['Origine-translation-grideWise-y']
+		this.numberDots=this.lineParams['y-axis']['dots']
+		this.perx=this.width/this.xstroke_count_major;
+		this.pery=this.height/this.numberDots;
+		this.fitwithmajor=this.lineParams['graph']['fitwithmajor']
+		this.defaultRectStyle={'opacity':'0.2','fill':'#fff'}
+		this.defaultCircleRadius=8
+		this.ansLinePlot=[]
+		if(this.fitwithmajor){
+			this.rectWidth=this.perx;
+			this.rectHeight=this.pery;
+			this.crosSize=0.3*Math.min(this.rectWidth,this.rectHeight)
+		}else{
+			this.rectWidth=this.lineParams['rect']['width']
+			this.rectHeight=this.lineParams['rect']['height']
+			this.crosSize=this.lineParams['rect']['cros-size']			
+		}
+		this.rectSet=paper.set()
+		this.crossSet=paper.set()
+		this.clearSet=paper.set()
+		this.xmajor_grid_pointset=[]
+		this.drawLine(paper)
+	}
+	GraphmathJS.drawLine=function(paper){
+		this.xaxis;
+		this.xaxis=paper.path([["M",this.left,this.top+this.height],["L",this.left+this.width+this.right_margin,this.top+this.height]]);		
+		this.xaxis.attr(this.lineParams['line']['line-style']);
+		GraphmathJS.writeXLabelsLine(paper);
+		GraphmathJS.drawStrokesLinePlot(paper);
+		GraphmathJS.writeXAxisTitleLinePlot(paper);
+		GraphmathJS.writeYAxisTitleLinePlot(paper);
+		GraphmathJS.drawLinePlotcross(paper)
+	}
+	GraphmathJS.drawLinePlotcross=function(paper){
+		for(var i=0;i<GraphmathJS.xmajor_grid_pointset.length;i++){
+			GraphmathJS.ansLinePlot.push(0)
+			GraphmathJS.rectSet.push(paper.set())
+			GraphmathJS.crossSet.push(paper.set())
+			for(var j=0;j<GraphmathJS.numberDots;j++){
+				var rect=paper.rect(GraphmathJS.xmajor_grid_pointset[i][0]-this.rectWidth/2,GraphmathJS.xmajor_grid_pointset[i][1]-this.rectHeight*(j+1),this.rectWidth,GraphmathJS.rectHeight).attr(this.defaultRectStyle)
+				var crpah=[["M",GraphmathJS.xmajor_grid_pointset[i][0]-GraphmathJS.crosSize/2,GraphmathJS.xmajor_grid_pointset[i][1]-this.rectHeight*(j)-GraphmathJS.crosSize/2-this.rectHeight/2],["L",GraphmathJS.xmajor_grid_pointset[i][0]+GraphmathJS.crosSize/2,GraphmathJS.xmajor_grid_pointset[i][1]-this.rectHeight*(j)+GraphmathJS.crosSize/2-this.rectHeight/2],["M",GraphmathJS.xmajor_grid_pointset[i][0]-GraphmathJS.crosSize/2,GraphmathJS.xmajor_grid_pointset[i][1]-this.rectHeight*(j)+GraphmathJS.crosSize/2-this.rectHeight/2],["L",GraphmathJS.xmajor_grid_pointset[i][0]+GraphmathJS.crosSize/2,GraphmathJS.xmajor_grid_pointset[i][1]-this.rectHeight*(j)-GraphmathJS.crosSize/2-this.rectHeight/2]]
+				var cross=paper.path(crpah).attr(this.lineParams['graph']['cross-style']).toBack()
+				rect.x=i;
+				rect.y=j;
+				cross.x=i;
+				cross.y=j;
+				//cross.hide()
+				if (GraphmathJS.touchDevice){
+					rect.touchstart(GraphmathJS.linePlotClickHandler)
+				}
+				else{
+					rect.click(GraphmathJS.linePlotClickHandler)
+				}
+				GraphmathJS.crossSet[i].push(cross);
+				GraphmathJS.rectSet[i].push(rect);
+			}
+			var rect=paper.rect(GraphmathJS.xmajor_grid_pointset[i][0]-this.rectWidth/2,GraphmathJS.xmajor_grid_pointset[i][1],this.rectWidth,GraphmathJS.rectHeight).attr({'stroke':'#f0f','fill':'#fff','opacity':0})
+			rect.x=i
+			rect.y=-1
+			var circle=paper.circle(GraphmathJS.xmajor_grid_pointset[i][0],GraphmathJS.xmajor_grid_pointset[i][1],GraphmathJS.defaultCircleRadius).attr({'stroke':'#f0f','fill':'#fff','opacity':0})
+			circle.x=i
+			circle.y=-1
+			if (GraphmathJS.touchDevice){
+				rect.touchstart(function(){GraphmathJS.clearthis(this.x)})
+				circle.touchstart(function(){GraphmathJS.clearthis(this.x)})				
+			}
+			else{
+				rect.click(function(){GraphmathJS.clearthis(this.x)})
+				circle.click(function(){GraphmathJS.clearthis(this.x)})				
+			}
+			GraphmathJS.clearSet.push(rect)
+		}
+	}
+	GraphmathJS.getCrossSet=function(){
+		return GraphmathJS.crossSet;
+	}
+	GraphmathJS.getRectSet=function(){
+		return GraphmathJS.rectSet;
+	}
+	
+	GraphmathJS.linePlotClickHandler=function(){
+		var max=0
+		if((GraphmathJS.crossSet[this.x][this.y].attr('opacity'))==1){
+			GraphmathJS.crossSet[this.x][this.y].attr({'opacity':0.2})
+			try{
+			if((GraphmathJS.crossSet[this.x][this.y+1].attr('opacity'))==1)
+				max=this.y
+			else
+				max=this.y-1
+			}
+			catch(err){
+				max=this.y-1
+			}
+			GraphmathJS.clearthis(this.x)
+		}
+		else{
+			max=this.y
+		}
+		for (var i=0;i<=max;i++){
+			//GraphmathJS.rectSet[this.x][i].attr({'stroke':'#f0f','fill':'#f0f'})
+			GraphmathJS.crossSet[this.x][i].attr({'opacity':1})
+			GraphmathJS.ansLinePlot[this.x]=i+1
+		}
+		GraphmathJS.callBackClick()
+	}
+	GraphmathJS.callBackClick=function(){
+
+	}
+	GraphmathJS.clearthis=function (i){
+		for(var j=0;j<GraphmathJS.crossSet[i].length;j++){
+			//GraphmathJS.rectSet[i].attr({'stroke':'#000','fill':'#fff'})
+			GraphmathJS.crossSet[i][j].attr({'opacity':0.2})
+			this.ansLinePlot[i]=0
+		}
+		GraphmathJS.callBackClick()
+	}
+	GraphmathJS.drawStrokesLinePlot=function(paper){
+		var pointset=[]
+		for (var i=0;i<this.xmajor_grid_pointset.length;i++){
+			pointset.push(["M",this.xmajor_grid_pointset[i][0],this.xmajor_grid_pointset[i][1]-this.lineParams['line']['stroke-size']])
+			pointset.push(["L",this.xmajor_grid_pointset[i][0],this.xmajor_grid_pointset[i][1]+this.lineParams['line']['stroke-size']])
+		}
+		GraphmathJS.majorStrokeLinePlot=paper.path(pointset).attr(this.lineParams['line']['stroke-style']);
+		return GraphmathJS.majorStrokeLinePlot;
+	}
+	GraphmathJS.writeXLabelsLine=function(paper){
+		this.xmajor_grid_pointset=[[this.left+this.left_margin,this.top+this.height]]
+		for(var i=0;i<this.xstroke_count_major-1;i++){
+			this.xmajor_grid_pointset.push([this.left+this.left_margin+this.perx*(i+1),this.top+this.height])
+		}
+		this.labelsx=GraphmathJS.xAxisLabels;
+		if(this.labelsx.length<=0){
+			var step=(GraphmathJS.xAxisMax-this.xAxisMin)/this.xstroke_count_major;
+			for (var i=this.origineTranslationGrideWiseY;i>=0;i--){
+				this.labelsx.push((i)*step*(-1))
+			}
+			for (var i=this.origineTranslationGrideWiseY;i<this.xstroke_count_major;i++){
+				this.labelsx.push((i+1-this.origineTranslationGrideWiseY)*step)
+			}
+		}
+		for (var i=0;i<this.xmajor_grid_pointset.length;i++){
+			if((""+this.labelsx[i]).search("/")==-1){				
+				paper.text(this.xmajor_grid_pointset[i][0],this.xmajor_grid_pointset[i][1]+this.xAxisLabelsMargin,this.labelsx[i]).rotate(this.xAxisLabelsRotate).attr(this.xAxisLabelsStyle)
+			}
+			else{
+				var xstrokeTitle=paper.text(this.xmajor_grid_pointset[i][0],this.xmajor_grid_pointset[i][1]+this.xAxisLabelsMargin,this.labelsx[i].replace("/","\n")).rotate(this.xAxisLabelsRotate).attr(this.xAxisLabelsStyle)	
+				GraphmathJS.writeUnderLine(paper,xstrokeTitle)
+			}
+		}
+	}
+	GraphmathJS.writeUnderLine=function(paper,textElement){
+		var tb=textElement["[object Object]"].getBBox();
+		var y=(textElement["[object Object]"].attr('font-size'))+4		
+		return(paper.path("M"+tb.x+" "+(tb.y+tb.height-y)+"L"+(tb.x+tb.width)+" "+(tb.y+tb.height-y)).attr('stroke-width',1.5));
+	}
+	GraphmathJS.writeXAxisTitleLinePlot=function(paper){		
+		GraphmathJS.xTitle=paper.text(GraphmathJS.left+GraphmathJS.left_margin+GraphmathJS.width/2,GraphmathJS.top+GraphmathJS.height+GraphmathJS.lineParams['line']['title-margin'],GraphmathJS.lineParams['line']['title']).attr(GraphmathJS.lineParams['line']['title-style'])
+		return GraphmathJS.xTitle;
+	}
+	GraphmathJS.writeYAxisTitleLinePlot=function(paper){
+		GraphmathJS.yTitle=paper.text(GraphmathJS.left-GraphmathJS.lineParams['y-axis']['title-margin'],GraphmathJS.top+GraphmathJS.height/2,GraphmathJS.lineParams['y-axis']['title']).attr(GraphmathJS.lineParams['y-axis']['title-style']).rotate(-90,GraphmathJS.left-GraphmathJS.lineParams['y-axis']['title-margin'],GraphmathJS.top+GraphmathJS.height/2)
+		return GraphmathJS.yTitle;
+	}
+
+	GraphmathJS.demoInteractionCircle=function(p,c){
+		setTimeout(function(){
+			if(GraphmathJS.noInteraction){
+				console.log('time out')
+			}
+		}, 
+		3000);
+	}
     return GraphmathJS;
 }
+
 
 function MergeRecursive(obj1, obj2) 
 {

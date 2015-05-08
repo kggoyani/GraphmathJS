@@ -10,9 +10,10 @@ function GraphmathJS(){
 	GraphmathJS.dragShapes=[]
 	GraphmathJS.bars=[]
 	GraphmathJS.dragBars=[]
-	GraphmathJS.params = {'plot':{'clickEnable':true,'width':500,'height':400,'left':50,'top':50,'top-margin':20,'left-margin':20,'right-margin':20,'bottom-margin':20,'origin-quadrant':0,'max-drag-dot':4,'touchsense':16,'Origine-translation-grideWise-x':0,'Origine-translation-grideWise-y':0,'Origine-visible':true,'Origine-quadrant-place':3,'Origine-text-style':{'font-family':'verdana','font-size':16,'font-weight':'bold'}},'x-axis':{'stroke-count-major':10,'stroke-size': 5,'stroke-count-minor':5,'min':0,'max':10,'labels':[],'labels-margin':15,'minor-stroke-size':3,'strokes_visible':true,'snap-to-major-grid':true,'style':{"stroke": "#000000", "stroke-width": 2, "arrow-end": "open-long-wide", "arrow-start": "open-long-wide"},'stroke-style':{"stroke": "#F58220", "stroke-width": 2},'labels-style':[{"font-size": 12, "font-weight": "800"}],'labels-rotate':0,'title-visible':false,'x-title':'x-axis','x-title-margin':30,'x-title-style':{"font-size":16,"font-weight":600,"font-family":"verdana"}},'y-axis':{'stroke-size': 5,'minor-stroke-size':3,'min':0,'max':10,'stroke-count-major':10,'stroke-count-minor':5,'label-decimal':0,'labels':[],'labels-margin':15,'style':{"stroke": "#000000", "stroke-width": 2, "arrow-end": "open-long-wide", "arrow-start": "open-long-wide"},'stroke-style':{"stroke": "#F58220", "stroke-width": 2},'labels-style':[{"font-size": 12, "font-weight": "800"}],'labels-rotate':0,'title':'y-axis','title-margin':30,'title-style':{"font-size":16,"font-weight":600,"font-family":"verdana"}},'grid':{'visible':true,'minor-grid-visible':false,'major_style':{'stroke-opacity':1,'stroke':'#C4D8E2'},'minor_style':{'stroke-opacity':0.1},'title-visible':false},'axis':{'stroke':'#000','opacity':1}};
-	GraphmathJS.circleParams={"fill":"#FFCD59","stroke":"#FDBD00"}
-	GraphmathJS.dragCircleParams={"fill":"#FFCD59","stroke":"#FFCD59"}
+	GraphmathJS.touchsense=16
+	GraphmathJS.params = {'plot':{'clickEnable':true,'width':500,'height':400,'left':50,'top':50,'top-margin':20,'left-margin':20,'right-margin':20,'bottom-margin':20,'origin-quadrant':0,'max-drag-dot':4,'touchsense':16,'Origine-translation-grideWise-x':0,'Origine-translation-grideWise-y':0,'Origine-visible':true,'Origine-quadrant-place':3,'Origine-text-style':{'font-family':'verdana','font-size':16,'font-weight':'bold'},'snap-to-major-grid':true},'x-axis':{'stroke-count-major':10,'stroke-size': 5,'stroke-count-minor':5,'min':0,'max':10,'labels':[],'labels-margin':15,'minor-stroke-size':3,'strokes_visible':true,'style':{"stroke": "#000000", "stroke-width": 2, "arrow-end": "open-long-wide", "arrow-start": "open-long-wide"},'stroke-style':{"stroke": "#F58220", "stroke-width": 2},'labels-style':[{"font-size": 12, "font-weight": "800"}],'labels-rotate':0,'title-visible':false,'x-title':'x-axis','x-title-margin':30,'x-title-style':{"font-size":16,"font-weight":600,"font-family":"verdana"},'label-visible':true},'y-axis':{'stroke-size': 5,'minor-stroke-size':3,'min':0,'max':10,'stroke-count-major':10,'stroke-count-minor':5,'label-decimal':0,'labels':[],'labels-margin':15,'style':{"stroke": "#000000", "stroke-width": 2, "arrow-end": "open-long-wide", "arrow-start": "open-long-wide"},'stroke-style':{"stroke": "#F58220", "stroke-width": 2},'labels-style':[{"font-size": 12, "font-weight": "800"}],'labels-rotate':0,'title':'y-axis','title-margin':30,'title-style':{"font-size":16,"font-weight":600,"font-family":"verdana"},'label-visible':true},'grid':{'visible':true,'minor-grid-visible':false,'major_style':{'stroke-opacity':1,'stroke':'#C4D8E2'},'minor_style':{'stroke-opacity':0.1},'title-visible':false},'axis':{'stroke':'#000','opacity':1}};
+	GraphmathJS.circleParams={"fill":"#FF6600","stroke":"#FF6600"}
+	GraphmathJS.dragCircleParams={'fill':'#0033CC','stroke':'#0033CC'}
 	GraphmathJS.dragCircleTouch={'increaseradius':7,'defaultRadius':6}
 	GraphmathJS.defaultLineParameter={'stroke-width':3,'stroke':'#4aba8d'}
 	GraphmathJS.defaultShapeParameter={'stroke-width':3,'stroke':'#4aba8d','fill':'#fff','fill-opacity':0}
@@ -20,8 +21,12 @@ function GraphmathJS(){
 	GraphmathJS.defaultBarControlParameter={'height':10}
 	GraphmathJS.defaultMathFollowingParameter={'circleRadius':6,'left-stroke':'#0000FF','left-fill':'#0000FF','right-stroke':'#FF6600','right-fill':'#FF6600','right-box-width':80,'right-box-height':50}//
 	GraphmathJS.lineParams={'y-axis':{'dots':5,'title':'Items','title-margin':30,'title-style':{"font-size":16,"font-weight":600,"font-family":"verdana"}},'graph':{'right-margin':50,'Origine-translation-grideWise-y':0,'left':40,'top':10,'width':500,'height':200,'top-margin':20,'left-margin':50,'fitwithmajor':true,'cross-style':{'opacity':'0.2','fill':'#f0f','stroke-width':'3'}},line:{'stroke-size':5,'stroke-style':{"stroke": "#F58220", "stroke-width": 2},'labels-style':[{"font-size": 12, "font-weight": "800"}],'labels-rotate':0,'title-visible':false,'title':'x-axis','title-margin':30,'title-style':{"font-size":16,"font-weight":600,"font-family":"verdana"},'stroke-count-minor':5,'min':0,'max':10,'labels':[],'labels-margin':15,'minor-stroke-size':3,'strokes_visible':true,'snap-to-major-grid':true,'stroke-count-major':10,'line-style':{"stroke": "#000000", "stroke-width": 2, "arrow-end": "open-long-wide", "arrow-start": "open-long-wide"}},'rect':{'width':50,'height':30,'cros-size':10}}
+	GraphmathJS.clockParams={'x':100,'y':100,'radius':95,'innerCircleStyle':{"fill":"#f5f5f5","stroke":'#009fcf',"stroke-width":"5"},'outerCircleStyle':{"stroke":"#292929","stroke-width":"2"},'tick-style':{'stroke':"#B0B0B0"},'font-style':{'font-size':16,"font-weight":800,'fill':'#009fcf'},'text-circle-style':{"stroke":"#CCCCCC"},'tick-style-number':{'stroke':"#909090",'stroke-width':2,"arrow-end":"classic-midium-long","stroke-linecap":"round"},'hour-hand-style':{stroke: "#444444", "stroke-width": 6},'minute-hand-style':{stroke: "#444444", "stroke-width": 4},'pin-style':{"fill":"#000000"},'text-circle-radius':10,'hour-hand-length':50,'minute-hand-length':70,'drag-hour-hand':false,'drag-minute-hand':false,'hour-handler-radius':6,'minute-handler-radius':6,'per-minute-snap':1,'per-hour-sanp':1,'minute-hadler-style':{"stroke": "#0000FF","fill" : "#0000FF"},'hour-handler-style':{"stroke": "#0000FF","fill" : "#0000FF"}}
+	GraphmathJS.numberLineParams={'left':10,'top':50,'title':'Numbers','title-visible':true,'stroke-width':10,'width':400,'height':50,'labels':[],'labels-style':{'font-size': 12, "font-weight": "800"},'line-style':{'stroke': '#000000', 'stroke-width': 2, 'arrow-end': 'open-long-wide', 'arrow-start': 'open-long-wide'},'left-margin':50,'right-margin':50,'min':0,'max':10,'stroke-count':10,'stroke-style':{"stroke": "#F58220", "stroke-width": 2},'minor-stroke-count':5,'minor-stroke-visible':true,'max-drag-dot':4,'Origine-translation-grideWise':0,'labels-margin':15,'snap-to-minor-grid':false}
+	GraphmathJS.pictureGraphParams={'width':500,'height':500,'left':10,'top':10,'column-header':['Item','Number of items'],'row-count':5,'row-labels-header':['vanilla','cream pie','watermelon','cherry','mint-chocolate'],'imagesLabel':false,'row-item':'http://beta.math.practutor.ahm/img/cone.png','header-line-style':{'stroke':'#990099','stroke-width':4},'row-line-style':{'stroke-width':1},'itemImageSameHeader':true,'header-height':20,'image-width':40,'image-height':40,'row-header-width':100,'header-style':{'font-family':'verdana','font-size':18,'font-weight':'bold','fill':'#d8a816'},'row-labels-header-style':{'font-family':'verdana','font-size':14,'font-weight':'bold','fill':'#cb4338'},'column-item-count':5,'background-circle-style':{'fill':'gray','stroke':'gray','opacity':1}}
 	GraphmathJS.touchDevice=false//'stroke-size':5
 	GraphmathJS.noInteraction=true;
+	GraphmathJS.rad=Math.PI / 180;
 	var nAgt = navigator.userAgent;
 	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(nAgt) ) {
 		GraphmathJS.touchDevice= true;
@@ -69,6 +74,8 @@ function GraphmathJS(){
 		this.drawAxies(paper);
 		this.drawGrids(paper);
 		this.drawStrokes(paper);
+		
+
 		this.writeLabels(paper)
 		GraphmathJS.paper=paper
 		if(this.params["plot"]["Origine-visible"])
@@ -96,7 +103,8 @@ function GraphmathJS(){
 					this.labelsx.push((i)*step*(-1))
 			}
 			for (var i=this.origineTranslationGrideWiseY;i<this.xstroke_count_major;i++){
-				this.labelsx.push((i+1-this.origineTranslationGrideWiseY)*step)
+				//console.log(this.xAxisMin,(i+1-this.origineTranslationGrideWiseY),step)
+				this.labelsx.push(this.xAxisMin+(i+1-this.origineTranslationGrideWiseY)*step)
 			}
 		}
 		for (var i=0;i<this.xmajor_grid_pointset.length;i++){
@@ -114,7 +122,8 @@ function GraphmathJS(){
 					this.labelsy.push((i)*step*(-1))
 			}
 			for (var i=this.origineTranslationGrideWiseX;i<=this.ystroke_count_major;i++){
-				this.labelsy.push((i+1-this.origineTranslationGrideWiseX)*step)
+
+				this.labelsy.push(this.yAxisMin+(i+1-this.origineTranslationGrideWiseX)*step)
 			}
 		}
 		for (var i=0;i<this.ymajor_grid_pointset.length;i++){
@@ -122,8 +131,10 @@ function GraphmathJS(){
 		}
 	}
 	GraphmathJS.writeLabels=function(paper){
-		GraphmathJS.writeXLabels(paper);
-		GraphmathJS.writeYLabels(paper);
+		if(GraphmathJS.params["x-axis"]['label-visible'])
+			GraphmathJS.writeXLabels(paper);
+		if(GraphmathJS.params["y-axis"]['label-visible'])
+			GraphmathJS.writeYLabels(paper);
 		if(GraphmathJS.params['x-axis']['title-visible'])
 			GraphmathJS.writeXAxisTitle(paper)
 		if(GraphmathJS.params['y-axis']['title-visible'])
@@ -143,30 +154,48 @@ function GraphmathJS(){
 			this.drawMinorStroke(paper);
 	}
 	GraphmathJS.drawMajorStroke=function(paper){
+		GraphmathJS.drawMajorStrokeX(paper)
+		GraphmathJS.drawMajorStrokeY(paper)		
+	}
+	GraphmathJS.drawMajorStrokeX=function(paper){
 		var pointset=[]
 		for (var i=0;i<this.xmajor_grid_pointset.length;i++){
 			pointset.push(["M",this.xmajor_grid_pointset[i][0]+this.transformXAxies[0],this.xmajor_grid_pointset[i][1]-this.params['x-axis']['stroke-size']+this.transformXAxies[1]])
 			pointset.push(["L",this.xmajor_grid_pointset[i][0]+this.transformXAxies[0],this.xmajor_grid_pointset[i][1]+this.params['x-axis']['stroke-size']+this.transformXAxies[1]])
 		}
+		GraphmathJS.majorStrokeX=paper.path(pointset).attr(this.params['x-axis']['stroke-style']);
+		return GraphmathJS.majorStrokeX;
+	}
+	GraphmathJS.drawMajorStrokeY=function(paper){
+		var pointset=[]
 		for (var i=0;i<this.ymajor_grid_pointset.length;i++){
 			pointset.push(["M",this.ymajor_grid_pointset[i][0]-this.params['x-axis']['stroke-size']+this.transformYAxies[0],this.ymajor_grid_pointset[i][1]+this.transformYAxies[1]])
 			pointset.push(["L",this.ymajor_grid_pointset[i][0]+this.params['x-axis']['stroke-size']+this.transformYAxies[0],this.ymajor_grid_pointset[i][1]+this.transformYAxies[1]])
 		}
-		GraphmathJS.majorStroke=paper.path(pointset).attr(this.params['x-axis']['stroke-style']);
-		return GraphmathJS.majorStroke;
+		GraphmathJS.majorStrokeY=paper.path(pointset).attr(this.params['y-axis']['stroke-style']);
+		return GraphmathJS.majorStrokeY;
 	}
 	GraphmathJS.drawMinorStroke=function(paper){
+		GraphmathJS.drawMinorStrokeX(paper)
+		GraphmathJS.drawMinorStrokeY(paper)		
+	}
+	GraphmathJS.drawMinorStrokeX=function(paper){
 		var pointSet=[]
 		for (var i=0;i<this.xminor_grid_pointset.length;i++){
 			pointSet.push(["M",this.xminor_grid_pointset[i][0]+this.transformXAxies[0],this.xminor_grid_pointset[i][1]-this.params['x-axis']['minor-stroke-size']+this.transformXAxies[1]])
 			pointSet.push(["L",this.xminor_grid_pointset[i][0]+this.transformXAxies[0],this.xminor_grid_pointset[i][1]+this.params['x-axis']['minor-stroke-size']+this.transformXAxies[1]])
 		}
+		GraphmathJS.minorStrokeX=paper.path(pointSet).attr(this.params['x-axis']['stroke-style']);
+		return GraphmathJS.minorStrokeX
+	}
+	GraphmathJS.drawMinorStrokeY=function(paper){
+		var pointSet=[]
 		for (var i=0;i<this.yminor_grid_pointset.length;i++){
-			pointSet.push(["M",this.yminor_grid_pointset[i][0]-this.params['x-axis']['minor-stroke-size']+this.transformYAxies[0],this.yminor_grid_pointset[i][1]+this.transformYAxies[1]])
-			pointSet.push(["L",this.yminor_grid_pointset[i][0]+this.params['x-axis']['minor-stroke-size']+this.transformYAxies[0],this.yminor_grid_pointset[i][1]+this.transformYAxies[1]])
+			pointSet.push(["M",this.yminor_grid_pointset[i][0]-this.params['y-axis']['minor-stroke-size']+this.transformYAxies[0],this.yminor_grid_pointset[i][1]+this.transformYAxies[1]])
+			pointSet.push(["L",this.yminor_grid_pointset[i][0]+this.params['y-axis']['minor-stroke-size']+this.transformYAxies[0],this.yminor_grid_pointset[i][1]+this.transformYAxies[1]])
 		}
-		GraphmathJS.minorStroke=paper.path(pointSet).attr(this.params['x-axis']['stroke-style']);
-		return GraphmathJS.minorStroke
+		GraphmathJS.minorStrokeY=paper.path(pointSet).attr(this.params['y-axis']['stroke-style']);
+		return GraphmathJS.minorStrokeY
 	}
 	GraphmathJS.drawGrids=function(paper){
 		if(this.params['grid']['minor-grid-visible'])
@@ -212,13 +241,13 @@ function GraphmathJS(){
 		}
 		pointset.push(["M",this.left+this.left_margin,this.top+this.pery*(i)]);
 		pointset.push(["L",this.left+this.left_margin+this.width,this.top+this.pery*(i)]);
-		this.ymajor_grid_pointset.push([this.left+this.left_margin,this.top+this.pery*(i)])
-		this.major_grid=paper.path(pointset).attr(this.params['grid']['major_style']);
+		this.ymajor_grid_pointset.push([this.left+this.left_margin,this.top+this.pery*(i)])		
+		GraphmathJS.major_grid=paper.path(pointset).attr(this.params['grid']['major_style']);
 		if (this.clickEnable){
 			GraphmathJS.setClickOnGraph(paper)
 			GraphmathJS.clickInstruction=paper.text(GraphmathJS.left+GraphmathJS.left_margin+GraphmathJS.width/2,GraphmathJS.top+GraphmathJS.height/2,"Click to add vertices").attr({'font-family':'verdana','font-size':25,'fill':'#949096'}).toBack();
 		}
-		return this.major_grid;
+		return GraphmathJS.major_grid;
 	}
 	GraphmathJS.drawAxies=function(paper){
 		this.yaxis;
@@ -399,7 +428,7 @@ function GraphmathJS(){
 		this.data('ref').animate({'r':this.data('intialr')+GraphmathJS.dragCircleTouch['increaseradius']},50,">")
 		this.animate({'r':GraphmathJS.touchsense+this.data('intialr')+GraphmathJS.dragCircleTouch['increaseradius']},50,">");
 	}
-	GraphmathJS.foutCircle=function(dx,dy){
+	GraphmathJS.foutCircle=function(){
 		this.data('ref').animate({'r':this.data('intialr')},50,">")
 		this.animate({'r':GraphmathJS.touchsense+this.data('intialr')},50,">");
 	}//handlerfunction
@@ -766,6 +795,7 @@ function GraphmathJS(){
 	GraphmathJS.upMTF=function(){
 		var t=GraphmathJS.InsideSquare(this.attr('cx'),this.attr('cy'))		
 		if(t=='outside'){
+			// this.ansIndex=''
 			this.attr({'cx':this.circleref.origine.attr('cx'),'cy':this.circleref.origine.attr('cy')})
 			this.circleref.attr({'cx':this.circleref.origine.attr('cx'),'cy':this.circleref.origine.attr('cy')})		
 			GraphmathJS.drawPathMTF(this.circleref.path,this.circleref.origine.attr('cx'),this.circleref.origine.attr('cy'))
@@ -840,7 +870,7 @@ function GraphmathJS(){
 	}
 	GraphmathJS.drawLine=function(paper){
 		this.xaxis;
-		this.xaxis=paper.path([["M",this.left,this.top+this.height],["L",this.left+this.width+this.right_margin,this.top+this.height]]);		
+		this.xaxis=paper.path([["M",this.left,this.top+this.height],["L",this.left+this.width+this.right_margin+this.left_margin,this.top+this.height]]);		
 		this.xaxis.attr(this.lineParams['line']['line-style']);
 		GraphmathJS.writeXLabelsLine(paper);
 		GraphmathJS.drawStrokesLinePlot(paper);
@@ -978,7 +1008,523 @@ function GraphmathJS(){
 		GraphmathJS.yTitle=paper.text(GraphmathJS.left-GraphmathJS.lineParams['y-axis']['title-margin'],GraphmathJS.top+GraphmathJS.height/2,GraphmathJS.lineParams['y-axis']['title']).attr(GraphmathJS.lineParams['y-axis']['title-style']).rotate(-90,GraphmathJS.left-GraphmathJS.lineParams['y-axis']['title-margin'],GraphmathJS.top+GraphmathJS.height/2)
 		return GraphmathJS.yTitle;
 	}
+	GraphmathJS.drawClock=function(paper,params){
+		params = params || {};
+		this.lineParams=MergeRecursive(this.clockParams,params);
+		this.cx=this.clockParams['x']
+		this.cy=this.clockParams['y']
+		this.radius=this.clockParams['radius']
+		this.dragHour=this.clockParams['drag-hour-hand']
+		this.dragMinute=this.clockParams['drag-minute-hand']
+		this.majorMinuteSnapClock=GraphmathJS.clockParams['per-minute-snap']*6
+		this.majorHourSnapClock=GraphmathJS.clockParams['per-hour-sanp']*30
+		GraphmathJS.paper=paper
+		GraphmathJS.hour_value=0
+		GraphmathJS.minute_value=0
+		this.generateClock(paper)
+	}
+	GraphmathJS.generateClock=function(paper){
+		GraphmathJS.clock=paper.set();
+		var c=paper.circle(GraphmathJS.cx,GraphmathJS.cy,GraphmathJS.radius).attr(GraphmathJS.clockParams['innerCircleStyle']);
+		var outerCircle=paper.circle(GraphmathJS.cx,GraphmathJS.cy,GraphmathJS.radius+parseInt(GraphmathJS.clockParams['innerCircleStyle']['stroke-width'])).attr(GraphmathJS.clockParams['outerCircleStyle']);		
+		var pathset=[]
+		for (var i=0;i<60;i++){
+			var r1=GraphmathJS.radius-parseInt(GraphmathJS.clockParams['innerCircleStyle']['stroke-width'])-5
+			var r2=GraphmathJS.radius-parseInt(GraphmathJS.clockParams['innerCircleStyle']['stroke-width'])+3
+			pathset.push(["M",GraphmathJS.cx+r1*Math.cos(6*i*Math.PI/180),GraphmathJS.cy+r1*Math.sin(6*i*Math.PI/180)],["L",GraphmathJS.cx+r2*Math.cos(6*i*Math.PI/180),GraphmathJS.cy+r2*Math.sin(6*i*Math.PI/180)])
+			if(i%5==0)
+					{
+						r1=GraphmathJS.radius-parseInt(GraphmathJS.clockParams['innerCircleStyle']['stroke-width'])-8;
+						r2=GraphmathJS.radius-parseInt(GraphmathJS.clockParams['innerCircleStyle']['stroke-width'])+5;
+						paper.path([["M",GraphmathJS.cx+r1*Math.cos(6*i*Math.PI/180),GraphmathJS.cy+r1*Math.sin(6*i*Math.PI/180)],["L",GraphmathJS.cx+r2*Math.cos(6*i*Math.PI/180),GraphmathJS.cy+r2*Math.sin(6*i*Math.PI/180)]]).attr(GraphmathJS.clockParams['tick-style-number'])
+						var start_xt = GraphmathJS.cx+Math.round((GraphmathJS.radius-22)*Math.cos(6*i*Math.PI/180));
+						var start_yt = GraphmathJS.cy+Math.round((GraphmathJS.radius-22)*Math.sin(6*i*Math.PI/180));
+						paper.text(start_xt,start_yt,((i/5)+2)%12+1).attr(GraphmathJS.clockParams['font-style']);
+						paper.circle(start_xt,start_yt,GraphmathJS.clockParams["text-circle-radius"]).attr(GraphmathJS.clockParams["text-circle-style"]);
+						
+					}
+		}
+		var ticks=paper.path(pathset).attr(GraphmathJS.clockParams['tick-style'])
+		GraphmathJS.clock.push(c)
+		GraphmathJS.clock.push(outerCircle)
+		GraphmathJS.clock.push(ticks)
+		GraphmathJS.hour_hand =paper.path([["M",GraphmathJS.cx,GraphmathJS.cy],["L",GraphmathJS.cx,GraphmathJS.cy-GraphmathJS.clockParams["hour-hand-length"]]]).attr(GraphmathJS.clockParams["hour-hand-style"]);
+		GraphmathJS.minute_hand=paper.path([["M",GraphmathJS.cx,GraphmathJS.cy],["L",GraphmathJS.cx,GraphmathJS.cy-GraphmathJS.clockParams["minute-hand-length"]]]).attr(GraphmathJS.clockParams["minute-hand-style"]);
+		GraphmathJS.setTouch(paper)				
+		GraphmathJS.clock.push(GraphmathJS.hour_hand);
+		GraphmathJS.clock.push(GraphmathJS.minute_hand);
+		var pin=paper.circle(GraphmathJS.cx,GraphmathJS.cy, 5).attr(GraphmathJS.clockParams["pin-style"]);
+		GraphmathJS.clock.push(pin);
+		return GraphmathJS.clock
+	}
+	GraphmathJS.setTouch=function(paper){
+		if (GraphmathJS.dragHour){
+			GraphmathJS.hourCircle=paper.path(GraphmathJS.circleToPath(GraphmathJS.cx,GraphmathJS.cy,GraphmathJS.clockParams["hour-hand-length"])).attr({'opacity':0})
+			GraphmathJS.hour_handlerOriginal=paper.circle(GraphmathJS.cx,GraphmathJS.cy-GraphmathJS.clockParams["hour-hand-length"],GraphmathJS.clockParams["hour-handler-radius"]).attr(GraphmathJS.clockParams['hour-handler-style'])
+			GraphmathJS.hour_handler=paper.circle(GraphmathJS.cx,GraphmathJS.cy-GraphmathJS.clockParams["hour-hand-length"],GraphmathJS.clockParams["hour-handler-radius"]+GraphmathJS.touchsense).attr({'fill':'#fff','opacity':'0','cursor':'move'})
+			GraphmathJS.hour_handler.originalCircle=GraphmathJS.hour_handlerOriginal
+			GraphmathJS.hour_handler.path=GraphmathJS.hour_hand
+			GraphmathJS.hour_handler.circle=GraphmathJS.hourCircle
+			GraphmathJS.hour_handler.totalLen=GraphmathJS.hourCircle.getTotalLength()
+			GraphmathJS.hour_handler.changeRadius=0
+			GraphmathJS.hour_handler.l=(GraphmathJS.hour_handler.totalLen/360)*90
+			GraphmathJS.hour_handler.snapTo=GraphmathJS.majorHourSnapClock
+			GraphmathJS.hour_handler.drag(GraphmathJS.moveClock,GraphmathJS.startClock,GraphmathJS.upClock)
+		}
+		if (GraphmathJS.dragMinute){
+			GraphmathJS.minuteCircle=paper.path(GraphmathJS.circleToPath(GraphmathJS.cx,GraphmathJS.cy,GraphmathJS.clockParams["minute-hand-length"])).attr({'opacity':0})
+			GraphmathJS.minute_handlerOriginal=paper.circle(GraphmathJS.cx,GraphmathJS.cy-GraphmathJS.clockParams["minute-hand-length"]-6,GraphmathJS.clockParams["minute-handler-radius"]).attr(GraphmathJS.clockParams['minute-hadler-style'])	
+			GraphmathJS.minute_handler=paper.circle(GraphmathJS.cx,GraphmathJS.cy-GraphmathJS.clockParams["minute-hand-length"]-6,GraphmathJS.clockParams["minute-handler-radius"]+GraphmathJS.touchsense).attr({'fill':'#fff','opacity':0,'cursor':'move'})
+			GraphmathJS.minute_handler.path=GraphmathJS.minute_hand
+			GraphmathJS.minute_handler.originalCircle=GraphmathJS.minute_handlerOriginal
+			GraphmathJS.minute_handler.circle=GraphmathJS.minuteCircle
+			GraphmathJS.minute_handler.totalLen=GraphmathJS.minuteCircle.getTotalLength()
+			GraphmathJS.minute_handler.snapTo=GraphmathJS.majorMinuteSnapClock
+			GraphmathJS.minute_handler.l=(GraphmathJS.minute_handler.totalLen/360)*90
+			GraphmathJS.minute_handler.changeRadius=0//GraphmathJS.clockParams["radius"]+6 - GraphmathJS.clockParams["minute-hand-length"]
+			GraphmathJS.minute_handler.drag(GraphmathJS.moveClock,GraphmathJS.startClock,GraphmathJS.upClock)
+		}
+	}
+	GraphmathJS.startClock=function(){
+		this.ox = this.attr("cx");
+	    this.oy = this.attr("cy");
+	    // this.l=0;
+	}
+	GraphmathJS.moveClock=function(dx,dy){
+		var tmpPt = {
+	        x : this.ox + dx, 
+	        y : this.oy + dy
+	    };
+	    this.l = GraphmathJS.gradSearch(this.l, tmpPt,this.totalLen,this.circle);
+	    var pt = this.circle.getPointAtLength(this.l);
+	    this.attr({cx: pt.x, cy: pt.y});
+	    this.originalCircle.attr({cx: pt.x, cy: pt.y});
+	    var pathSet=this.path.attr('path')
+	    var theta=Math.atan2(pt.y-GraphmathJS.cy,pt.x-GraphmathJS.cx)
+	    pathSet[1][1]=pt.x - (this.changeRadius)*Math.cos(theta);
+	    pathSet[1][2]=pt.y - (this.changeRadius)*Math.sin(theta);
+	    this.path.attr('path',pathSet)
+	}
+	GraphmathJS.upClock=function(){
+		GraphmathJS.setToSnapOnClock(this)
+		GraphmathJS.callBackClock()
+	}
+	GraphmathJS.callBackClock=function(){
 
+	}
+	GraphmathJS.setToSnapOnClock=function(c){
+		var perminute=c.totalLen/360
+		var snapTo=c.snapTo*perminute
+		var pt=c.circle.getPointAtLength(Math.round(c.l/snapTo)*(snapTo))
+		c.l=Math.round(c.l/snapTo)*(snapTo)
+		c.attr({cx: pt.x, cy: pt.y});
+		c.originalCircle.attr({cx: pt.x, cy: pt.y});
+		var pathSet=c.path.attr('path')
+	    var theta=Math.atan2(pt.y-GraphmathJS.cy,pt.x-GraphmathJS.cx)
+	    pathSet[1][1]=pt.x - (c.changeRadius)*Math.cos(theta);
+	    pathSet[1][2]=pt.y - (c.changeRadius)*Math.sin(theta);
+	    c.path.attr('path',pathSet)
+		
+	}
+	GraphmathJS.setTime=function(hour,minutes){
+		var radHRS=(30*hour+(minutes/2.5))+90
+		var radMIN=(6*minutes)+90
+		if(GraphmathJS.dragHour){
+			var il=(GraphmathJS.hour_handler.totalLen/360)*radHRS
+			var pt = GraphmathJS.hour_handler.circle.getPointAtLength(il);
+			GraphmathJS.hour_handler.l=il
+		    GraphmathJS.hour_handler.attr({cx: pt.x, cy: pt.y});
+		    GraphmathJS.hour_handler.originalCircle.attr({cx: pt.x, cy: pt.y});
+			var pathSet=GraphmathJS.hour_hand.attr('path')
+		    var theta=Math.atan2(pt.y-GraphmathJS.cy,pt.x-GraphmathJS.cx)
+		    pathSet[1][1]=pt.x - ( GraphmathJS.hour_handler.changeRadius)*Math.cos(theta);
+		    pathSet[1][2]=pt.y - ( GraphmathJS.hour_handler.changeRadius)*Math.sin(theta);
+		    GraphmathJS.hour_hand.attr('path',pathSet)
+		}
+		else{
+			GraphmathJS.hour_hand.rotate((30*hour+(minutes/2.5)),GraphmathJS.cx,GraphmathJS.cy)
+			GraphmathJS.hour_value=hour
+		}
+		if(GraphmathJS.dragMinute){
+			var il=(GraphmathJS.minute_handler.totalLen/360)*radMIN			
+			GraphmathJS.minute_handler.l=il
+			var pt = GraphmathJS.minute_handler.circle.getPointAtLength(il);
+		    GraphmathJS.minute_handler.attr({cx: pt.x, cy: pt.y});
+		    GraphmathJS.minute_handler.originalCircle.attr({cx: pt.x, cy: pt.y});
+			var pathSet=GraphmathJS.minute_hand.attr('path')
+		    var theta=Math.atan2(pt.y-GraphmathJS.cy,pt.x-GraphmathJS.cx)
+		    pathSet[1][1]=pt.x - ( GraphmathJS.minute_handler.changeRadius)*Math.cos(theta);
+		    pathSet[1][2]=pt.y - ( GraphmathJS.minute_handler.changeRadius)*Math.sin(theta);
+		    GraphmathJS.minute_hand.attr('path',pathSet)
+		}
+		else{
+			 GraphmathJS.minute_hand.rotate(6*minutes,GraphmathJS.cx,GraphmathJS.cy)
+			 GraphmathJS.minute_value=minutes
+		}		
+	}
+	GraphmathJS.getTime=function(){
+		var hourNumber=0
+		var minuteNumber=0
+		if(GraphmathJS.dragMinute){
+			var radMIN=GraphmathJS.minute_handler.l/(GraphmathJS.minute_handler.totalLen/360)			
+			var degMIN=radMIN-90
+			if(degMIN<	0){
+				degMIN=radMIN+270
+			}
+			minuteNumber=Math.floor(degMIN/6)
+		}
+		else{
+			minuteNumber=GraphmathJS.minute_value	
+		}
+		if(GraphmathJS.dragHour){
+			var radHRS=GraphmathJS.hour_handler.l/(GraphmathJS.hour_handler.totalLen/360)
+			var degHRS=radHRS-90
+			if(degHRS<0){
+				degHRS=radHRS+270
+			}
+			hourNumber=Math.floor(degHRS/30*100)/100
+		}
+		else{
+			hourNumber=GraphmathJS.hour_value
+		}
+		return({'hour':hourNumber,'minute':minuteNumber})
+	}
+	GraphmathJS.circleToPath=function (cX, cY, r) {
+		var a = 0.55191502449;
+		return "M " + (cX - r) + "," + cY + " c 0,-" + (r * a) + " " + (r * (1 - a)) + ",-" + r + " " + r + ",-" + r + " " + (a * r) + ",0 " + r + "," + (r * (1 - a)) + " " + r + "," + r + " 0," + (a * r) + " -" + ((1 - a) * r) + "," + r + " -" + r + "," + r + " -" + (a * r) + ",0 -" + r + ",-" + ((1 - a) * r) + " -" + r + ",-" + r;
+	}
+	GraphmathJS.gradSearch = function (l0, pt,totLen,p) {
+	    var searchDl = 1;
+	    l0 = l0 + totLen;
+	    var l1 = l0,
+	        dist0 =GraphmathJS.dist(p.getPointAtLength(l0 % totLen), pt),
+	        dist1,
+	        searchDir;
+
+	    if (GraphmathJS.dist(p.getPointAtLength((l0 - searchDl) % totLen), pt) > 
+	       GraphmathJS.dist(p.getPointAtLength((l0 + searchDl) % totLen), pt)) {
+	        searchDir = searchDl;
+	    } else {
+	        searchDir = -searchDl;
+	    }
+
+	    l1 += searchDir;
+	    dist1 = GraphmathJS.dist(p.getPointAtLength(l1 % totLen), pt);
+	    while (dist1 < dist0) {
+	        dist0 = dist1;
+	        l1 += searchDir;
+	        dist1 = GraphmathJS.dist(p.getPointAtLength(l1 % totLen), pt);
+	    }
+	    l1 -= searchDir;
+	    
+	    return (l1 % totLen);
+	},
+	GraphmathJS.dist = function (pt1, pt2) {
+	    var dx = pt1.x - pt2.x;
+	    var dy = pt1.y - pt2.y;
+	    return Math.sqrt(dx * dx + dy * dy);
+	};
+	GraphmathJS.drawNumberLine=function(paper,params){
+		params = params || {};
+		this.numberLineParams=MergeRecursive(this.numberLineParams,params);
+		this.left=this.numberLineParams['left']
+		this.top=this.numberLineParams['top']
+		this.width=this.numberLineParams['width']
+		this.height=this.numberLineParams['height']
+		this.left_margin=this.numberLineParams['left-margin']
+		this.right_margin=this.numberLineParams['right-margin']
+		this.titleVisible=this.numberLineParams['title-visible']
+		this.strokeWidth=this.numberLineParams['stroke-width']
+		this.strokeCount=this.numberLineParams['stroke-count']
+		this.minorStrokeCount=this.numberLineParams['minor-stroke-count']
+		this.maxDragDot=GraphmathJS.numberLineParams['max-drag-dot']
+		this.origineTranslationGrideWise=this.numberLineParams['Origine-translation-grideWise']
+		this.labels=this.numberLineParams['labels']
+		this.snap_to_major_grid=this.numberLineParams['snap-to-minor-grid'];
+		this.labelsMargin=this.numberLineParams['labels-margin']
+		this.labelCordinates=[]
+		this.min=this.numberLineParams['min']
+		this.max=this.numberLineParams['max']
+		this.perx=this.width/this.strokeCount;
+		this.dragCircleLine=[]
+		this.circleLine=[]
+		GraphmathJS.createNumberLine(paper)
+	}
+	GraphmathJS.createNumberLine=function(paper){
+		var pathSet=[["M",this.left,this.top],["L",this.left+this.left_margin+this.width+this.right_margin,this.top]]
+		paper.path(pathSet).attr(GraphmathJS.numberLineParams['line-style'])
+		GraphmathJS.drawStrokeNumberLine(paper)
+		GraphmathJS.writeLabelsNumberLine(paper)
+	}
+	GraphmathJS.writeLabelsNumberLine=function(paper){
+		// GraphmathJS.labelCordinates
+		this.labelsx=GraphmathJS.labels;
+		if(this.labelsx.length<=0){
+			var step=(GraphmathJS.max-GraphmathJS.min)/this.strokeCount;
+			for (var i=this.origineTranslationGrideWise;i>=0;i--){
+				this.labelsx.push((i)*step*(-1))
+			}
+			for (var i=this.origineTranslationGrideWise;i<=this.strokeCount;i++){
+				this.labelsx.push((i+1-this.origineTranslationGrideWise)*step)
+			}
+		}
+		for (var i=0;i<this.labelCordinates.length;i++){
+			if((""+this.labelsx[i]).search("/")==-1){
+				paper.text(this.labelCordinates[i][0],this.labelCordinates[i][1]+this.labelsMargin,this.labelsx[i]).attr(this.numberLineParams['labels-style'])
+			}
+			else{
+				var xstrokeTitle=paper.text(this.labelCordinates[i][0],this.labelCordinates[i][1]+this.labelsMargin,this.labelsx[i].replace("/","\n")).attr(this.numberLineParams['labels-style'])
+				GraphmathJS.writeUnderLine(paper,xstrokeTitle)
+			}
+		}
+	}
+	GraphmathJS.drawStrokeNumberLine=function(paper){
+		var pathSet=[]
+		var minorPath=[]
+		for (var i=0;i<GraphmathJS.strokeCount;i++){
+			pathSet.push(["M",GraphmathJS.left+GraphmathJS.left_margin+GraphmathJS.perx*i,GraphmathJS.top- GraphmathJS.strokeWidth/2])
+			pathSet.push(["L",GraphmathJS.left+GraphmathJS.left_margin+GraphmathJS.perx*i,GraphmathJS.top+ GraphmathJS.strokeWidth/2])
+			GraphmathJS.labelCordinates.push([GraphmathJS.left+GraphmathJS.left_margin+GraphmathJS.perx*i,GraphmathJS.top])
+			for(var j=1;j<GraphmathJS.minorStrokeCount;j++){
+				minorPath.push(["M",GraphmathJS.left+GraphmathJS.left_margin+GraphmathJS.perx*i+(GraphmathJS.perx/GraphmathJS.minorStrokeCount)*j,GraphmathJS.top- GraphmathJS.strokeWidth/4])
+				minorPath.push(["L",GraphmathJS.left+GraphmathJS.left_margin+GraphmathJS.perx*i+(GraphmathJS.perx/GraphmathJS.minorStrokeCount)*j,GraphmathJS.top+ GraphmathJS.strokeWidth/4])
+			}
+		}
+		pathSet.push(["M",GraphmathJS.left+GraphmathJS.left_margin+GraphmathJS.perx*i,GraphmathJS.top- GraphmathJS.strokeWidth/2])
+		pathSet.push(["L",GraphmathJS.left+GraphmathJS.left_margin+GraphmathJS.perx*i,GraphmathJS.top+ GraphmathJS.strokeWidth/2])
+		GraphmathJS.labelCordinates.push([GraphmathJS.left+GraphmathJS.left_margin+GraphmathJS.perx*i,GraphmathJS.top])
+		if(GraphmathJS.numberLineParams['minor-stroke-visible'])
+		GraphmathJS.minorStroke=paper.path(minorPath).attr(GraphmathJS.numberLineParams['stroke-style'])
+		GraphmathJS.majorStroke=paper.path(pathSet).attr(GraphmathJS.numberLineParams['stroke-style'])
+	}
+	GraphmathJS.circleNumberLine=function(paper,cx,r){
+		var actualX=GraphmathJS.getActualCoordinateLine(cx)
+		var x=GraphmathJS.setToMajorMinorStroke(actualX)
+		var c=paper.circle(actualX,GraphmathJS.top,r).attr(this.circleParams)
+		this.circleLine.push(c)
+		return c
+	}
+	GraphmathJS.dragCircleNumberLine=function(paper,cx,r){		
+		var actualX=GraphmathJS.getActualCoordinateLine(cx)
+		var x=GraphmathJS.setToMajorMinorStroke(actualX)
+		var c=paper.circle(actualX,GraphmathJS.top,r).attr(this.dragCircleParams)
+		var touchCircle=paper.circle(actualX,GraphmathJS.top,r+this.touchsense)
+		touchCircle.attr({'opacity':0,'cursor':'move','fill':'#fff'})
+		touchCircle.circle=c
+		touchCircle.intialr=r
+		touchCircle.hover(GraphmathJS.finCircleLine,GraphmathJS.foutCircleLine)
+	 	touchCircle.drag(this.moveCircleLine,this.startCircleLine,this.upCircleLine)	
+	 	this.dragCircleLine.push(c)
+		return touchCircle
+	}
+	GraphmathJS.getDragCirclesLines=function(){
+		return GraphmathJS.dragCircleLine;
+	}
+	GraphmathJS.moveCircleLine=function(dx,dy){
+		if(GraphmathJS.insideLine(this.ox+dx)){
+			this.attr({'cx':this.ox+dx})
+			this.circle.attr({'cx':this.ox+dx})	
+		}
+	}
+	GraphmathJS.insideLine=function(x){
+		if(x>=(this.left+this.left_margin)&&x<=(this.left+this.left_margin+this.width)){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	GraphmathJS.startCircleLine=function(){
+		this.ox=this.attr('cx');
+	}
+	GraphmathJS.upCircleLine=function(){
+		var x=GraphmathJS.setToMajorMinorStroke(this.attr('cx'))
+		this.attr({'cx':x})
+		this.circle.attr({'cx':x})
+		GraphmathJS.callBackUpLine()
+	}
+	GraphmathJS.callBackUpLine=function(){
+
+	}
+	GraphmathJS.setToMajorMinorStroke=function(x,y){
+		var cps=GraphmathJS.circlePerSquereLine()
+		var cpsx=cps
+		var mx=Math.round((x-GraphmathJS.left-GraphmathJS.left_margin)/(GraphmathJS.perx/cpsx));		
+		var aprX=mx*(GraphmathJS.perx/cpsx)+(GraphmathJS.left+GraphmathJS.left_margin);
+		return(aprX)
+	}
+	GraphmathJS.getActualCoordinateLine=function(cx){
+		return(cx*GraphmathJS.perx+(GraphmathJS.origineTranslationGrideWise*GraphmathJS.perx+GraphmathJS.left+GraphmathJS.left_margin))
+	}
+	GraphmathJS.circlePerSquereLine=function(){
+		if (this.snap_to_major_grid){
+			return(GraphmathJS.minorStrokeCount)
+		}
+		else{
+			return(1)
+		}
+	}
+	GraphmathJS.getPointX=function(c){
+		return((c.attr('cx')-(GraphmathJS.origineTranslationGrideWise*GraphmathJS.perx+GraphmathJS.left+GraphmathJS.left_margin))/GraphmathJS.perx)
+	}
+	GraphmathJS.finCircleLine=function(){
+		
+		this.circle.animate({'r':this.intialr+GraphmathJS.dragCircleTouch['increaseradius']},50,">")
+		this.animate({'r':GraphmathJS.touchsense+this.intialr+GraphmathJS.dragCircleTouch['increaseradius']},50,">");
+	}
+	GraphmathJS.foutCircleLine=function(){
+		this.circle.animate({'r':this.intialr},50,">")
+		this.animate({'r':GraphmathJS.touchsense+this.intialr},50,">");
+	}
+	GraphmathJS.drawPictureGraph=function(paper,params){
+		params=params||{}
+		this.pictureGraphParams=MergeRecursive(this.pictureGraphParams,params);
+		this.left=this.pictureGraphParams['left']
+		this.top=this.pictureGraphParams['top']
+		this.width=this.pictureGraphParams['width']
+		this.height=this.pictureGraphParams['height']
+		this.columnHeaders=this.pictureGraphParams['column-header']
+		this.rowCount=this.pictureGraphParams['row-count']
+		this.headerHeight=this.pictureGraphParams['header-height']
+		this.rowHeaderWidth=this.pictureGraphParams['row-header-width']
+		this.columnItemCount=this.pictureGraphParams['column-item-count']
+		this.pery=(this.height-this.headerHeight)/(this.rowCount)
+		this.perx=(this.width-this.rowHeaderWidth)/(this.columnItemCount)
+		this.isImageLabel=this.pictureGraphParams['imagesLabel']
+		this.rowItem=this.pictureGraphParams['row-item']
+		this.isitemImageSameHeader=this.pictureGraphParams['itemImageSameHeader']
+		this.imageWidth=this.pictureGraphParams['image-width']
+		this.imageHeight=this.pictureGraphParams['image-height']
+		this.rowLabelsHeader=this.pictureGraphParams['row-labels-header']
+		this.imageSet=[]
+		this.circleSet=[]
+		this.rectSet=[]
+		this.resetRect=[]
+		this.ansPictureGraph=[]
+		if(this.isitemImageSameHeader)
+			this.rowItem=this.rowItem
+		this.imagesForEveryRowItem=false
+		this.rowLabelsHeaderStyle=false
+		if (typeof(this.rowItem)=="object")
+			this.imagesForEveryRowItem=true
+		if (typeof (this.pictureGraphParams['row-labels-header-style'].length) !== "undefined")
+			this.rowLabelsHeaderStyle=true
+		this.createPictureGraph(paper)			
+	}
+	GraphmathJS.createPictureGraph=function(paper){
+		var headerFooterPathSet=[]
+		headerFooterPathSet.push(["M",this.left,this.top],["L",this.left+this.width,this.top])
+		headerFooterPathSet.push(["M",this.left,this.top+this.height],["L",this.left+this.width,this.top+this.height])
+		var rowPathSet=[]
+		rowPathSet.push(["M",this.left,this.top+GraphmathJS.headerHeight],["L",this.left+this.width,this.top+GraphmathJS.headerHeight])
+		for(var i=0;i<this.rowCount;i++){
+			rowPathSet.push(["M",this.left,this.top+this.pery*(i+1)+GraphmathJS.headerHeight],["L",this.left+this.width,this.top+this.pery*(i+1)+GraphmathJS.headerHeight])
+		}
+		paper.path(headerFooterPathSet).attr(this.pictureGraphParams['header-line-style'])
+		paper.path(rowPathSet).attr(this.pictureGraphParams['row-line-style'])
+		paper.text(this.left+this.rowHeaderWidth/2,this.top+this.headerHeight/2,this.columnHeaders[0]).attr(GraphmathJS.pictureGraphParams['header-style'])
+		paper.text(this.left+this.rowHeaderWidth+(this.width-this.left-this.rowHeaderWidth)/2,this.top+this.headerHeight/2,this.columnHeaders[1]).attr(GraphmathJS.pictureGraphParams['header-style'])
+		var saparator=paper.path([["M",this.left+this.rowHeaderWidth,this.top],["L",this.left+this.rowHeaderWidth,this.top+this.height]]).attr(this.pictureGraphParams['row-line-style'])
+		this.writeRowHeader(paper)
+		this.drawItemsPictureGraph(paper)
+	}
+	GraphmathJS.drawItemsPictureGraph=function(paper){
+		for(var i=0;i<GraphmathJS.rowCount;i++){
+			this.imageSet.push(paper.set())
+			this.circleSet.push(paper.set())
+			this.rectSet.push(paper.set())
+			this.ansPictureGraph.push(0)
+			for(var j=0;j<GraphmathJS.columnItemCount;j++){
+				if(GraphmathJS.imagesForEveryRowItem){
+					var image=paper.image(this.rowItem[i],this.left+this.rowHeaderWidth+this.imageWidth/2+this.perx*j,this.top+this.headerHeight+this.pery*i+this.pery/2-this.imageHeight/2,this.imageWidth,this.imageHeight).attr({'opacity':0.2})//.hide()
+				}
+				else{
+					var image=paper.image(this.rowItem,this.left+this.rowHeaderWidth+this.imageWidth/2+this.perx*j,this.top+this.headerHeight+this.pery*i+this.pery/2-this.imageHeight/2,this.imageWidth,this.imageHeight).attr({'opacity':0.2})//.hide()	
+				}
+					
+					var rect=paper.rect(this.left+this.rowHeaderWidth+this.perx*j,this.top+this.headerHeight+this.pery*i,this.perx,this.pery).attr({'opacity':0,'fill':'#fff'})
+					rect.x=i
+					rect.y=j
+					if (GraphmathJS.touchDevice)
+						rect.touchstart(GraphmathJS.circleClickHandler)
+					else
+						rect.click(GraphmathJS.circleClickHandler)
+					this.imageSet[i].push(image)
+					this.rectSet[i].push(rect)
+			}
+		}
+	}
+	GraphmathJS.circleClickHandler=function(){
+		var max=0
+		if((GraphmathJS.imageSet[this.x][this.y].attr('opacity'))==1){
+			GraphmathJS.imageSet[this.x][this.y].attr({'opacity':0.2})
+			try{
+			if((GraphmathJS.imageSet[this.x][this.y+1].attr('opacity'))==1)
+				max=this.y
+			else
+				max=this.y-1
+			}
+			catch(err){
+				max=this.y-1
+			}
+			GraphmathJS.clearPicture(this.x)
+		}
+		else{
+			max=this.y
+		}
+		for (var i=0;i<=max;i++){
+			GraphmathJS.imageSet[this.x][i].attr({'opacity':1})
+		}
+		GraphmathJS.ansPictureGraph[this.x]=i
+		GraphmathJS.callBackClickPicture();
+	}
+	GraphmathJS.clearPicture=function(j){
+		for (var i=0;i<this.columnItemCount;i++){
+			GraphmathJS.imageSet[j][i].attr({'opacity':0.2})
+		}
+		GraphmathJS.ansPictureGraph[j]=0
+		GraphmathJS.callBackClickPicture();
+	}
+	GraphmathJS.setPictureToRow=function(x,y){
+		for (var i=0;i<y;i++){
+			GraphmathJS.imageSet[x][i].attr({'opacity':1})
+		}
+	}
+	GraphmathJS.callBackClickPicture=function(){
+
+	}
+	GraphmathJS.setUnclickPicture=function(){
+		for(var i=0;i<this.rectSet.length;i++){
+			for(var j=0;j<this.rectSet[i].length;j++){
+				this.rectSet[i][j].unclick()
+			}
+			GraphmathJS.resetRect[i].unclick()
+		}
+	}
+	GraphmathJS.writeRowHeader=function(paper){
+		for (var i=0;i<GraphmathJS.rowCount;i++){
+			if(GraphmathJS.imagesForEveryRowItem){
+				paper.image(this.rowItem[i],this.left+this.rowHeaderWidth/2-this.imageWidth/2,this.top+this.headerHeight+this.pery*i+this.pery/2-this.imageHeight/2,this.imageWidth,this.imageHeight)
+			}
+			else{
+				var t=paper.text(this.left+this.rowHeaderWidth/2,this.top+this.headerHeight+this.pery*i+this.pery/2,this.rowLabelsHeader[i])
+				if(this.rowLabelsHeaderStyle)
+					t.attr(GraphmathJS.pictureGraphParams['row-labels-header-style'][i])
+				else
+					t.attr(GraphmathJS.pictureGraphParams['row-labels-header-style'])
+			}
+			var rect=paper.rect(this.left,this.top+this.headerHeight+this.pery*i,this.rowHeaderWidth,this.pery).attr({'opacity':0,'fill':'#fff'})
+			rect.x=i
+			if (GraphmathJS.touchDevice)
+				rect.touchstart(GraphmathJS.clickRectClear)
+			else
+				rect.click(GraphmathJS.clickRectClear)
+			GraphmathJS.resetRect.push(rect)
+		}
+	}
+	GraphmathJS.clickRectClear=function(){
+		GraphmathJS.clearPicture(this.x)
+	}
 	GraphmathJS.demoInteractionCircle=function(p,c){
 		setTimeout(function(){
 			if(GraphmathJS.noInteraction){
